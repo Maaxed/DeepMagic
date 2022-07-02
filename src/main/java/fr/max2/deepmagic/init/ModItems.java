@@ -17,6 +17,7 @@ public class ModItems
 {
 	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, DeepMagicMod.MOD_ID);
 	public static final RegistryObject<Item> DEEP_DARK_DUST = register("deep_dark_dust", Item::new);
+	public static final RegistryObject<Item> DEEP_DARK_PEARL = register("deep_dark_pearl", Item::new);
 	
 	private static final Supplier<Properties> DEFAULT_PROPERTIES = () -> new Properties().tab(ModItemGroups.MAIN_TAB);
 

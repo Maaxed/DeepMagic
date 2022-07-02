@@ -25,11 +25,12 @@ public class ModItemModelProvider extends ItemModelProvider
 	protected void registerModels()
 	{
 		simpleItem(ModItems.DEEP_DARK_DUST.get());
+		simpleItem(ModItems.DEEP_DARK_PEARL.get());
 	}
 	
 	protected ItemModelBuilder simpleItem(ItemLike entry)
 	{
-		return singleTexture(name(entry), mcLoc("item/generated"), "layer0", itemTexture(entry));
+		return simpleItem(name(entry), itemTexture(entry));
 	}
 	
 	protected ItemModelBuilder simpleItem(String modelName, ResourceLocation texture)
