@@ -2,6 +2,7 @@ package fr.max2.deepmagic.item;
 
 import fr.max2.deepmagic.capability.CapabilityTransportationHandler;
 import fr.max2.deepmagic.capability.ITransportationHandler;
+import fr.max2.deepmagic.capability.ITransportationHandler.TransportStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -72,13 +74,16 @@ public class TransportationWandItem extends Item
                 }
                 else
                 {
-                    extract(transportation, inventory);
+                    extract(transportation, inventory, new Vec3(
+                        targetPos.getX() + 0.5 + targetFace.getStepX() * 0.5,
+                        targetPos.getY() + 0.5 + targetFace.getStepY() * 0.5,
+                        targetPos.getZ() + 0.5 + targetFace.getStepZ() * 0.5));
                 }
             });
         });
     }
 
-    private static boolean extract(ITransportationHandler transportation, IItemHandler inventory)
+    private static boolean extract(ITransportationHandler transportation, IItemHandler inventory, Vec3 pos)
     {
         if (transportation.isFull())
             return false;
@@ -89,7 +94,7 @@ public class TransportationWandItem extends Item
             if (extractedStack.isEmpty())
                 continue;
 
-            if (transportation.insertItem(extractedStack))
+            if (transportation.insertItem(new TransportStack(extractedStack, pos)))
                 return true;
         }
 
@@ -98,17 +103,20 @@ public class TransportationWandItem extends Item
 
     private static boolean insert(ITransportationHandler transportation, IItemHandler inventory)
     {
-        ItemStack toInsert = transportation.extractItem(STACK_SIZE, true);
-
-        if (toInsert.isEmpty())
+        TransportStack toInsert = transportation.extractItem(STACK_SIZE, true);
+        if (toInsert == null)
             return false;
 
-        ItemStack remainingStack = ItemHandlerHelper.insertItem(inventory, toInsert, false);
-
-        if (remainingStack.getCount() == toInsert.getCount())
+        ItemStack stack = toInsert.getStack();
+        if (stack.isEmpty())
             return false;
 
-        transportation.extractItem(toInsert.getCount() - remainingStack.getCount(), false);
+        ItemStack remainingStack = ItemHandlerHelper.insertItem(inventory, stack, false);
+
+        if (remainingStack.getCount() == stack.getCount())
+            return false;
+
+        transportation.extractItem(stack.getCount() - remainingStack.getCount(), false);
         return true;
     }
 
