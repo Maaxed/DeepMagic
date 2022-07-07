@@ -28,6 +28,13 @@ public class ModRecipeProvider extends RecipeProvider
 			.define('E', Items.ENDER_EYE)
 			.unlockedBy("has_echo_shard", has(Items.ECHO_SHARD))
 			.save(consumer);
+		ShapedRecipeBuilder.shaped(ModItems.TRANSPORTATION_WAND.get())
+			.pattern(" P")
+			.pattern("S ")
+			.define('P', ModItems.DEEP_DARK_PEARL.get())
+			.define('S', Items.STICK)
+			.unlockedBy("has_deep_dark_pearl", has(ModItems.DEEP_DARK_PEARL.get()))
+			.save(consumer);
 	}
 	
 	@Override

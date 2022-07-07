@@ -26,6 +26,7 @@ public class ModItemModelProvider extends ItemModelProvider
 	{
 		simpleItem(ModItems.DEEP_DARK_DUST.get());
 		simpleItem(ModItems.DEEP_DARK_PEARL.get());
+		simpleItem(ModItems.TRANSPORTATION_WAND.get());
 	}
 	
 	protected ItemModelBuilder simpleItem(ItemLike entry)

@@ -37,6 +37,8 @@ public class ModLanguagesProvider implements DataProvider
     {
     	// Items
 		add(ModItems.DEEP_DARK_DUST, "Deep Dark Dust", "Poudre des abîbes");
+		add(ModItems.DEEP_DARK_PEARL, "Deep Dark Pearl", "Perle des abîbes");
+		add(ModItems.TRANSPORTATION_WAND, "Transportation Wand", "Baguette de transport");
     	
     	// ItemGroups
     	add(ModItemGroups.MAIN_TAB, "DeepMagic", "DeepMagic");
