@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import fr.max2.deepmagic.capability.BaseTransportationHandler;
 import fr.max2.deepmagic.capability.CapabilityTransportationHandler;
-import fr.max2.deepmagic.capability.ITransportationHandler.TransportStack;
+import fr.max2.deepmagic.capability.BaseTransportationHandler.TransportStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;

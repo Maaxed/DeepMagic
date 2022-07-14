@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 
 import fr.max2.deepmagic.DeepMagicMod;
-import fr.max2.deepmagic.capability.BaseTransportationHandler;
 import fr.max2.deepmagic.capability.CapabilityTransportationHandler;
-import fr.max2.deepmagic.capability.ITransportationHandler.TransportStack;
+import fr.max2.deepmagic.capability.ClientTransportationHandler;
+import fr.max2.deepmagic.capability.BaseTransportationHandler.TransportStack;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -69,21 +69,18 @@ public class TransportationRenderer
 	{
 		player.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 		{
-			if (!(transportation instanceof BaseTransportationHandler bth))
-				return;
-
-			int stackCount = bth.getSize();
-			if (stackCount <= 0)
+			if (!(transportation instanceof ClientTransportationHandler bth))
 				return;
 
 			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			float fullTick = player.tickCount + partialTick;
+			int stackCount = bth.getSize();
 
-			for (int i = 0; i < stackCount; i++)
+			bth.getIndexStacks((stack, i) ->
 			{
-				renderStack(renderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, bth.getStack(i), player.getPosition(partialTick).add(0, 0.5, 0), partialTick, dispatcher.getPackedLightCoords(player, partialTick), player.getId() + i);
-			}
+				renderStack(renderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, stack, player.getPosition(partialTick).add(0, 0.5, 0), partialTick, dispatcher.getPackedLightCoords(player, partialTick), player.getId() + i);
+			});
 		});
 	}
 

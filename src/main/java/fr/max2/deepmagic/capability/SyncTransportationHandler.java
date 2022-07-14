@@ -29,6 +29,6 @@ public class SyncTransportationHandler extends BaseTransportationHandler
 	{
 		super.onExtracted(stack, index);
 
-		ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> target), new EntityExtractTransportationMessage(this.target, index));
+		ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> target), new EntityExtractTransportationMessage(this.target, index, stack));
 	}
 }

@@ -1,7 +1,7 @@
 package fr.max2.deepmagic.capability;
 
 import fr.max2.deepmagic.DeepMagicMod;
-import fr.max2.deepmagic.capability.ITransportationHandler.TransportStack;
+import fr.max2.deepmagic.capability.BaseTransportationHandler.TransportStack;
 import fr.max2.deepmagic.init.ModNetwork;
 import fr.max2.deepmagic.network.EntityReplaceTransportationMessage;
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -46,7 +47,7 @@ public class CapabilityTransportationHandler
 				return;
 
 			int size = 16;
-			BaseTransportationHandler handler = player.level.isClientSide ? new BaseTransportationHandler(size) : new SyncTransportationHandler(size, player);
+			BaseTransportationHandler handler = player.level.isClientSide ? new ClientTransportationHandler(size) : new SyncTransportationHandler(size, player);
 			TransportationCapabilityProvider<?, ?> capability = new TransportationCapabilityProvider<>(handler);
 
 			event.addListener(capability::invalidate);
@@ -111,14 +112,12 @@ public class CapabilityTransportationHandler
 				if (!(transportation instanceof BaseTransportationHandler bth))
 					return;
 
-				int stackCount = bth.getSize();
-				for (int i = 0; i < stackCount; i++)
+				for (ItemStack stack : bth.getDrops())
 				{
-					TransportStack stack = bth.getStack(i);
-					if (stack == null || stack.getStack().isEmpty())
+					if (stack.isEmpty())
 						continue;
 
-					event.getDrops().add(entity.spawnAtLocation(stack.getStack()));
+					event.getDrops().add(entity.spawnAtLocation(stack));
 				}
 			});
 		}

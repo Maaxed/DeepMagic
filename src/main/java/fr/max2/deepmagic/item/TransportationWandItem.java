@@ -2,7 +2,6 @@ package fr.max2.deepmagic.item;
 
 import fr.max2.deepmagic.capability.CapabilityTransportationHandler;
 import fr.max2.deepmagic.capability.ITransportationHandler;
-import fr.max2.deepmagic.capability.ITransportationHandler.TransportStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -72,16 +71,17 @@ public class TransportationWandItem extends Item
         {
             player.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
             {
+                Vec3 pos = new Vec3(
+                        targetPos.getX() + 0.5 + targetFace.getStepX() * 0.5,
+                        targetPos.getY() + 0.5 + targetFace.getStepY() * 0.5,
+                        targetPos.getZ() + 0.5 + targetFace.getStepZ() * 0.5);
                 if (player.isShiftKeyDown())
                 {
-                    insert(transportation, inventory);
+                    insert(transportation, inventory, pos);
                 }
                 else
                 {
-                    extract(transportation, inventory, new Vec3(
-                        targetPos.getX() + 0.5 + targetFace.getStepX() * 0.5,
-                        targetPos.getY() + 0.5 + targetFace.getStepY() * 0.5,
-                        targetPos.getZ() + 0.5 + targetFace.getStepZ() * 0.5));
+                    extract(transportation, inventory, pos);
                 }
             });
         });
@@ -98,29 +98,25 @@ public class TransportationWandItem extends Item
             if (extractedStack.isEmpty())
                 continue;
 
-            if (transportation.insertItem(new TransportStack(extractedStack, pos)))
+            if (transportation.insertItem(extractedStack, pos))
                 return true;
         }
 
         return false;
     }
 
-    private static boolean insert(ITransportationHandler transportation, IItemHandler inventory)
+    private static boolean insert(ITransportationHandler transportation, IItemHandler inventory, Vec3 pos)
     {
-        TransportStack toInsert = transportation.extractItem(STACK_SIZE, true);
-        if (toInsert == null)
+        ItemStack toInsert = transportation.extractItem(STACK_SIZE, pos, true);
+        if (toInsert.isEmpty())
             return false;
 
-        ItemStack stack = toInsert.getStack();
-        if (stack.isEmpty())
+        ItemStack remainingStack = ItemHandlerHelper.insertItem(inventory, toInsert, false);
+
+        if (remainingStack.getCount() == toInsert.getCount())
             return false;
 
-        ItemStack remainingStack = ItemHandlerHelper.insertItem(inventory, stack, false);
-
-        if (remainingStack.getCount() == stack.getCount())
-            return false;
-
-        transportation.extractItem(stack.getCount() - remainingStack.getCount(), false);
+        transportation.extractItem(toInsert.getCount() - remainingStack.getCount(), pos, false);
         return true;
     }
 
