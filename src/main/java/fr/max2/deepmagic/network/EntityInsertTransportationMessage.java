@@ -32,7 +32,7 @@ public class EntityInsertTransportationMessage
 
 	public EntityInsertTransportationMessage(Entity entity, int index, TransportStack stack)
 	{
-		this(entity.getId(), index, stack.getStack(), stack.getPosition());
+		this(entity.getId(), index, stack.getStack(), stack.getOriginPosition());
 	}
 
 	public void encode(FriendlyByteBuf buf)

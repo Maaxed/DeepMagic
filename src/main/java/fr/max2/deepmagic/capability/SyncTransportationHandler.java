@@ -25,9 +25,9 @@ public class SyncTransportationHandler extends BaseTransportationHandler
 	}
 
 	@Override
-	protected void onExtracted(int index)
+	protected void onExtracted(TransportStack stack, int index)
 	{
-		super.onExtracted(index);
+		super.onExtracted(stack, index);
 
 		ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> target), new EntityExtractTransportationMessage(this.target, index));
 	}

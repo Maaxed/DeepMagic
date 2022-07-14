@@ -97,7 +97,7 @@ public class CapabilityTransportationHandler
 				if (!(transportation instanceof BaseTransportationHandler bth))
 					return;
 
-				bth.update(event.player.position().add(0, 0.5, 0));
+				bth.update();
 			});
 		}
 

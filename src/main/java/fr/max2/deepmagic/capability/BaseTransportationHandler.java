@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class BaseTransportationHandler implements ITransportationHandler, INBTSerializable<CompoundTag>
@@ -77,7 +76,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 				this.itemQueue[extractIndex] = null;
 				this.queueStartIndex = (this.queueStartIndex + 1) % this.itemQueue.length;
 				this.queueSize--;
-				this.onExtracted(extractIndex);
+				this.onExtracted(head, extractIndex);
 				return head;
 			}
 		}
@@ -136,7 +135,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 	protected void onInserted(TransportStack stack, int index)
 	{ }
 
-	protected void onExtracted(int index)
+	protected void onExtracted(TransportStack stack, int index)
 	{ }
 
 	// Internal methods
@@ -159,7 +158,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 		}).toList();
 	}
 
-	public void update(Vec3 targetPos)
+	public void update()
 	{
 		for (int i = 0; i < this.queueSize; i++)
 		{
@@ -167,7 +166,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 			if (this.itemQueue[index] == null)
 				continue;
 
-			this.itemQueue[index].updatePosition(targetPos);
+			this.itemQueue[index].update();
 		}
 	}
 

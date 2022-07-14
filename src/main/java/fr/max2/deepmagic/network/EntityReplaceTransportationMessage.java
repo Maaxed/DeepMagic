@@ -47,9 +47,10 @@ public class EntityReplaceTransportationMessage
 			{
 				buf.writeBoolean(true);
 				buf.writeItem(stack.getStack());
-				buf.writeDouble(stack.getPosition().x);
-				buf.writeDouble(stack.getPosition().y);
-				buf.writeDouble(stack.getPosition().z);
+				buf.writeDouble(stack.getOriginPosition().x);
+				buf.writeDouble(stack.getOriginPosition().y);
+				buf.writeDouble(stack.getOriginPosition().z);
+				buf.writeInt(stack.getTicksAlive());
 			}
 		}
 	}
@@ -72,9 +73,10 @@ public class EntityReplaceTransportationMessage
 					new Vec3(
 						buf.readDouble(),
 						buf.readDouble(),
-						buf.readDouble())
-					)
-				);
+						buf.readDouble()
+					),
+					buf.readInt()
+				));
 			}
 		}
 		return new EntityReplaceTransportationMessage(entityId, stacks);

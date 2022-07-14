@@ -18,38 +18,69 @@ public interface ITransportationHandler
 
 	public static class TransportStack
 	{
+		private static final int TRANSFERT_TIME = 20; // 1sec
 		private ItemStack stack;
-		private Vec3 position;
+		private Vec3 originPosition;
+		private int ticksAlive;
 
-		public TransportStack(@NotNull ItemStack stack, @NotNull Vec3 position)
+		public TransportStack(@NotNull ItemStack stack, @NotNull Vec3 originPosition, int ticksAlive)
 		{
 			this.stack = stack;
-			this.position = position;
+			this.originPosition = originPosition;
+			this.ticksAlive = ticksAlive;
+		}
+
+		public TransportStack(@NotNull ItemStack stack, @NotNull Vec3 originPosition)
+		{
+			this(stack, originPosition, 0);
 		}
 
 		public ItemStack getStack()
 		{
-			return stack;
+			return this.stack;
 		}
 
-		public Vec3 getPosition()
+		public Vec3 getOriginPosition()
 		{
-			return position;
+			return this.originPosition;
 		}
 
-		public void updatePosition(Vec3 targetPos)
+		public float getTransitionFactor(float partialTick)
 		{
-			position = position.lerp(targetPos, 0.1);
+			float ticks = this.ticksAlive + partialTick;
+
+			float f = ticks / TRANSFERT_TIME;
+			if (f > 1.0f)
+				f = 1.0f;
+
+			return f;
+		}
+
+		public Vec3 getCurrentPosition(Vec3 targetPos, float partialTick)
+		{
+			float f = getTransitionFactor(partialTick);
+
+			return this.originPosition.lerp(targetPos, f);
+		}
+
+		public int getTicksAlive()
+		{
+			return ticksAlive;
+		}
+
+		public void update()
+		{
+			this.ticksAlive++;
 		}
 
 		public TransportStack copy()
 		{
-			return new TransportStack(this.stack, this.position);
+			return new TransportStack(this.stack, this.originPosition, this.ticksAlive);
 		}
 
 		public TransportStack copyWithSize(int size)
 		{
-			return new TransportStack(ItemHandlerHelper.copyStackWithSize(this.stack, size), this.position);
+			return new TransportStack(ItemHandlerHelper.copyStackWithSize(this.stack, size), this.originPosition, this.ticksAlive);
 		}
 
 		public CompoundTag toNbt()
@@ -59,21 +90,15 @@ public interface ITransportationHandler
 			CompoundTag stackTag = new CompoundTag();
 			this.stack.save(stackTag);
 			tag.put("Stack", stackTag);
-			tag.putDouble("PosX", this.position.x);
-			tag.putDouble("PosY", this.position.y);
-			tag.putDouble("PosZ", this.position.z);
+
+			// Position and timeAlive doesn't really need to be saved on disk
 
 			return tag;
 		}
 
 		public static TransportStack fromNBT(CompoundTag tag)
 		{
-			return new TransportStack(
-				ItemStack.of(tag.getCompound("Stack")),
-				new Vec3(
-					tag.getDouble("PosX"),
-					tag.getDouble("PosY"),
-					tag.getDouble("PosZ")));
+			return new TransportStack(ItemStack.of(tag.getCompound("Stack")), new Vec3(0, 0, 0), TRANSFERT_TIME);
 		}
 	}
 }

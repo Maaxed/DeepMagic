@@ -82,24 +82,25 @@ public class TransportationRenderer
 
 			for (int i = 0; i < stackCount; i++)
 			{
-				renderStack(renderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, bth.getStack(i), partialTick, dispatcher.getPackedLightCoords(player, partialTick), player.getId() + i);
+				renderStack(renderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, bth.getStack(i), player.getPosition(partialTick).add(0, 0.5, 0), partialTick, dispatcher.getPackedLightCoords(player, partialTick), player.getId() + i);
 			}
 		});
 	}
 
-	private static void renderStack(ItemRenderer renderer, PoseStack poseStack, MultiBufferSource buffer, float fullTick, float rotAngle, TransportStack stack, float partialTick, int packedLight, int randSeed)
+	private static void renderStack(ItemRenderer renderer, PoseStack poseStack, MultiBufferSource buffer, float fullTick, float rotAngle, TransportStack stack, Vec3 targetPos, float partialTick, int packedLight, int randSeed)
 	{
 		if (stack == null)
 			return;
 
 		poseStack.pushPose();
 
-		Vec3 pos = stack.getPosition(); // TODO partial position
+		Vec3 pos = stack.getCurrentPosition(targetPos, partialTick);
 		poseStack.translate(pos.x, pos.y, pos.z);
 
 		poseStack.mulPose(Quaternion.fromXYZ(0.0f, fullTick * 0.2f - rotAngle, 0.0f));
 
-		poseStack.translate(0f, 0f, 1f);
+		float f = stack.getTransitionFactor(partialTick);
+		poseStack.translate(0f, Mth.sin(fullTick * 0.4f - rotAngle) * 0.2 * f, 1f * f);
 
 		renderer.renderStatic(stack.getStack(), TransformType.GROUND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, randSeed);
 
