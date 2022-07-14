@@ -39,7 +39,7 @@ public interface ITransportationHandler
 
 		public void updatePosition(Vec3 targetPos)
 		{
-			position.lerp(targetPos, 0.1);
+			position = position.lerp(targetPos, 0.1);
 		}
 
 		public TransportStack copy()
@@ -69,7 +69,7 @@ public interface ITransportationHandler
 		public static TransportStack fromNBT(CompoundTag tag)
 		{
 			return new TransportStack(
-				ItemStack.of(tag),
+				ItemStack.of(tag.getCompound("Stack")),
 				new Vec3(
 					tag.getDouble("PosX"),
 					tag.getDouble("PosY"),

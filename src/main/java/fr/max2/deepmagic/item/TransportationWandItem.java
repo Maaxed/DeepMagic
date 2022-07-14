@@ -52,6 +52,10 @@ public class TransportationWandItem extends Item
     public void onUsingTick(ItemStack stack, LivingEntity player, int count)
     {
         super.onUsingTick(stack, player, count);
+
+        if (player.level.isClientSide)
+            return;
+
         if ((USE_DURATION - count + 1) % USE_TIME != 0)
             return;
 
