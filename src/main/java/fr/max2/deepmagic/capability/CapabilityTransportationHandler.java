@@ -1,7 +1,6 @@
 package fr.max2.deepmagic.capability;
 
 import fr.max2.deepmagic.DeepMagicMod;
-import fr.max2.deepmagic.capability.BaseTransportationHandler.TransportStack;
 import fr.max2.deepmagic.init.ModNetwork;
 import fr.max2.deepmagic.network.EntityReplaceTransportationMessage;
 import net.minecraft.resources.ResourceLocation;
@@ -58,7 +57,7 @@ public class CapabilityTransportationHandler
 		public static void syncCapability(PlayerLoggedInEvent event)
 		{
 			// Sync capability data
-			if (!(event.getPlayer() instanceof ServerPlayer player))
+			if (!(event.getEntity() instanceof ServerPlayer player))
 				return;
 
 			player.getCapability(TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
@@ -74,7 +73,7 @@ public class CapabilityTransportationHandler
 		public static void trackCapability(PlayerEvent.StartTracking event)
 		{
 			// Sync capability data
-			if (!(event.getPlayer() instanceof ServerPlayer player))
+			if (!(event.getEntity() instanceof ServerPlayer player))
 				return;
 
 			Entity target = event.getTarget();
@@ -106,7 +105,7 @@ public class CapabilityTransportationHandler
 		public static void dropCapability(LivingDropsEvent event)
 		{
 			// Drop the content of the transportation capability
-			LivingEntity entity = event.getEntityLiving();
+			LivingEntity entity = event.getEntity();
 			entity.getCapability(TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
 				if (!(transportation instanceof BaseTransportationHandler bth))

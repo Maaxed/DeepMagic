@@ -53,7 +53,7 @@ public class TransportationRenderer
 	@SubscribeEvent
 	public static void renderThirdPerson(RenderPlayerEvent.Post event)
 	{
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		PoseStack poseStack = event.getPoseStack();
 		float partialTick = event.getPartialTick();
 		MultiBufferSource buffer = event.getMultiBufferSource();
