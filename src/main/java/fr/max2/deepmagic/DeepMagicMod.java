@@ -1,6 +1,8 @@
 package fr.max2.deepmagic;
 
+import fr.max2.deepmagic.init.ModBlocks;
 import fr.max2.deepmagic.init.ModItems;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -11,6 +13,9 @@ public class DeepMagicMod
 
 	public DeepMagicMod()
 	{
-		ModItems.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
+		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModItems.REGISTRY.register(modBus);
+		ModBlocks.BLOCK_REGISTRY.register(modBus);
+		ModBlocks.BLOCKENTITY_REGISTRY.register(modBus);
 	}
 }

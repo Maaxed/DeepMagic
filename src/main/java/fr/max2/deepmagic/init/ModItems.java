@@ -20,15 +20,15 @@ public class ModItems
 	public static final RegistryObject<Item> DEEP_DARK_DUST = register("deep_dark_dust", Item::new);
 	public static final RegistryObject<Item> DEEP_DARK_PEARL = register("deep_dark_pearl", Item::new);
 	public static final RegistryObject<TransportationWandItem> TRANSPORTATION_WAND = register("transportation_wand", TransportationWandItem::new);
-	
+
 	private static final Supplier<Properties> DEFAULT_PROPERTIES = () -> new Properties().tab(ModItemGroups.MAIN_TAB);
 
-	private static <I extends Item> RegistryObject<I> register(String name, Function<Properties, I> itemConstructor)
+	public static <I extends Item> RegistryObject<I> register(String name, Function<Properties, I> itemConstructor)
 	{
 	    return register(name, () -> itemConstructor.apply(DEFAULT_PROPERTIES.get()));
 	}
 
-	private static <I extends Item> RegistryObject<I> register(String name, Supplier<I> item)
+	public static <I extends Item> RegistryObject<I> register(String name, Supplier<I> item)
 	{
 	    return REGISTRY.register(name, item);
 	}
