@@ -21,6 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -67,19 +68,23 @@ public class TransportationRenderer
 
 	private static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, Entity player, float partialTick)
 	{
-		player.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
-		{
-			if (!(transportation instanceof ClientTransportationHandler bth))
-				return;
+		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+		EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+		renderTransportation(poseStack, buffer, itemRenderer, player, player.getPosition(partialTick).add(0, 0.5, 0), partialTick, player.tickCount, dispatcher.getPackedLightCoords(player, partialTick), player.getId());
+	}
 
-			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-			float fullTick = player.tickCount + partialTick;
+	public static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, ItemRenderer itemRenderer, ICapabilityProvider capabilityProvider, Vec3 pos, float partialTick, int tickCount, int packedLight, int randSeed)
+	{
+		capabilityProvider.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+		{
+			if (!(transportation instanceof ClientTransportationHandler bth)) return;
+
+			float fullTick = tickCount + partialTick;
 			int stackCount = bth.getSize();
 
 			bth.getIndexStacks((stack, i) ->
 			{
-				renderStack(renderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, stack, player.getPosition(partialTick).add(0, 0.5, 0), partialTick, dispatcher.getPackedLightCoords(player, partialTick), player.getId() + i);
+				renderStack(itemRenderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, stack, pos, partialTick, packedLight, randSeed + i);
 			});
 		});
 	}

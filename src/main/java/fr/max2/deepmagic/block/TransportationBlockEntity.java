@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import fr.max2.deepmagic.capability.BaseTransportationHandler;
 import fr.max2.deepmagic.capability.CapabilityTransportationHandler;
+import fr.max2.deepmagic.capability.ClientTransportationHandler;
 import fr.max2.deepmagic.capability.ITransportationHandler;
 import fr.max2.deepmagic.capability.TransportationUtils;
 import fr.max2.deepmagic.init.ModBlocks;
@@ -33,8 +34,8 @@ public class TransportationBlockEntity extends BlockEntity
 	private static final int USE_TIME = 5; // 0.25sec
 	private static final int SWITCH_TIME = 20; // 1sec
 
-	private final BaseTransportationHandler transportationHandler;
-	private final LazyOptional<ITransportationHandler> lazyCapa;
+	private BaseTransportationHandler transportationHandler = null;
+	private LazyOptional<ITransportationHandler> lazyCapa = LazyOptional.empty();
 	private final List<Action> actions = new ArrayList<>();
 	private int currentAction = 0;
 	private int actionTimer = 0;
@@ -42,12 +43,19 @@ public class TransportationBlockEntity extends BlockEntity
 	public TransportationBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
 	{
 		super(type, pos, state);
-		int size = 16;
-		this.transportationHandler = new BaseTransportationHandler(size);
-		this.lazyCapa = LazyOptional.of(() -> this.transportationHandler);
 
 		this.actions.add(new Action(pos.north(2), Direction.SOUTH, false));
 		this.actions.add(new Action(pos.south(2), Direction.NORTH, true));
+	}
+
+	@Override
+	public void setLevel(Level lvl)
+	{
+		super.setLevel(lvl);
+
+		int size = 16;
+		this.transportationHandler = lvl.isClientSide ? new ClientTransportationHandler(size) : new BaseTransportationHandler(size);
+		this.lazyCapa = LazyOptional.of(() -> this.transportationHandler);
 	}
 
 	public TransportationBlockEntity(BlockPos pos, BlockState state)
