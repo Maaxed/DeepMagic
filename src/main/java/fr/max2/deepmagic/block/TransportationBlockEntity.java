@@ -10,8 +10,10 @@ import fr.max2.deepmagic.capability.BaseTransportationHandler;
 import fr.max2.deepmagic.capability.CapabilityTransportationHandler;
 import fr.max2.deepmagic.capability.ClientTransportationHandler;
 import fr.max2.deepmagic.capability.ITransportationHandler;
+import fr.max2.deepmagic.capability.SyncTransportationHandler;
 import fr.max2.deepmagic.capability.TransportationUtils;
 import fr.max2.deepmagic.init.ModBlocks;
+import fr.max2.deepmagic.util.CapabilityProviderHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -34,6 +36,7 @@ public class TransportationBlockEntity extends BlockEntity
 	private static final int USE_TIME = 5; // 0.25sec
 	private static final int SWITCH_TIME = 20; // 1sec
 
+	private CompoundTag handlerTag = null;
 	private BaseTransportationHandler transportationHandler = null;
 	private LazyOptional<ITransportationHandler> lazyCapa = LazyOptional.empty();
 	private final List<Action> actions = new ArrayList<>();
@@ -52,9 +55,15 @@ public class TransportationBlockEntity extends BlockEntity
 	public void setLevel(Level lvl)
 	{
 		super.setLevel(lvl);
+		if (this.transportationHandler != null)
+			return;
 
 		int size = 16;
-		this.transportationHandler = lvl.isClientSide ? new ClientTransportationHandler(size) : new BaseTransportationHandler(size);
+		this.transportationHandler = lvl.isClientSide ? new ClientTransportationHandler(size) : new SyncTransportationHandler(size, CapabilityProviderHolder.blockEntity(this));
+		if (this.handlerTag != null)
+		{
+			this.transportationHandler.deserializeNBT(this.handlerTag);
+		}
 		this.lazyCapa = LazyOptional.of(() -> this.transportationHandler);
 	}
 
@@ -67,7 +76,15 @@ public class TransportationBlockEntity extends BlockEntity
 	protected void saveAdditional(CompoundTag tags)
 	{
 		super.saveAdditional(tags);
-		tags.put("content", this.transportationHandler.serializeNBT());
+		if (this.transportationHandler != null)
+		{
+			tags.put("content", this.transportationHandler.serializeNBT());
+		}
+		else if (this.handlerTag != null)
+		{
+			tags.put("content", this.handlerTag);
+
+		}
 		ListTag actions = new ListTag();
 		for (Action action : this.actions)
 		{
@@ -82,7 +99,15 @@ public class TransportationBlockEntity extends BlockEntity
 	public void load(CompoundTag tags)
 	{
 		super.load(tags);
-		this.transportationHandler.deserializeNBT(tags.getCompound("content"));
+		if (this.transportationHandler != null)
+		{
+			this.handlerTag = null;
+			this.transportationHandler.deserializeNBT(tags.getCompound("content"));
+		}
+		else
+		{
+			this.handlerTag = tags.getCompound("content");
+		}
 		ListTag actions = tags.getList("actions", Tag.TAG_COMPOUND);
 		this.actions.clear();
 		for (int i = 0; i < actions.size(); i++)
@@ -91,6 +116,22 @@ public class TransportationBlockEntity extends BlockEntity
 		}
 		this.currentAction = tags.getInt("currentAction");
 		this.actionTimer = tags.getInt("actionTimer");
+	}
+
+	@Override
+	public CompoundTag getUpdateTag()
+	{
+		CompoundTag tags = super.getUpdateTag();
+		if (this.transportationHandler != null)
+		{
+			tags.put("content", this.transportationHandler.serializeNBT());
+		}
+		else if (this.handlerTag != null)
+		{
+			tags.put("content", this.handlerTag);
+
+		}
+		return tags;
 	}
 
 	@Override
@@ -105,6 +146,9 @@ public class TransportationBlockEntity extends BlockEntity
 	protected void tick()
 	{
 		this.transportationHandler.update();
+
+		if (this.level.isClientSide)
+			return;
 
 		updateAction();
 	}

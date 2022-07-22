@@ -3,6 +3,7 @@ package fr.max2.deepmagic.capability;
 import fr.max2.deepmagic.DeepMagicMod;
 import fr.max2.deepmagic.init.ModNetwork;
 import fr.max2.deepmagic.network.EntityReplaceTransportationMessage;
+import fr.max2.deepmagic.util.CapabilityProviderHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -46,7 +47,7 @@ public class CapabilityTransportationHandler
 				return;
 
 			int size = 16;
-			BaseTransportationHandler handler = player.level.isClientSide ? new ClientTransportationHandler(size) : new SyncTransportationHandler(size, player);
+			BaseTransportationHandler handler = player.level.isClientSide ? new ClientTransportationHandler(size) : new SyncTransportationHandler(size, CapabilityProviderHolder.entity(player));
 			TransportationCapabilityProvider<?, ?> capability = new TransportationCapabilityProvider<>(handler);
 
 			event.addListener(capability::invalidate);

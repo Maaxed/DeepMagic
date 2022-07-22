@@ -1,16 +1,15 @@
 package fr.max2.deepmagic.capability;
 
 import fr.max2.deepmagic.init.ModNetwork;
-import fr.max2.deepmagic.network.EntityExtractTransportationMessage;
-import fr.max2.deepmagic.network.EntityInsertTransportationMessage;
-import net.minecraft.world.entity.Entity;
-import net.minecraftforge.network.PacketDistributor;
+import fr.max2.deepmagic.network.ExtractTransportationMessage;
+import fr.max2.deepmagic.util.CapabilityProviderHolder;
+import fr.max2.deepmagic.network.InsertTransportationMessage;
 
 public class SyncTransportationHandler extends BaseTransportationHandler
 {
-	private final Entity target;
+	private final CapabilityProviderHolder target;
 
-	public SyncTransportationHandler(int capacity, Entity target)
+	public SyncTransportationHandler(int capacity, CapabilityProviderHolder target)
 	{
 		super(capacity);
 		this.target = target;
@@ -20,15 +19,17 @@ public class SyncTransportationHandler extends BaseTransportationHandler
 	protected void onInserted(TransportStack stack, int index)
 	{
 		super.onInserted(stack, index);
+		this.target.setChanged();
 
-		ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> target), new EntityInsertTransportationMessage(this.target, index, stack));
+		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new InsertTransportationMessage(this.target, index, stack));
 	}
 
 	@Override
 	protected void onExtracted(TransportStack stack, int index)
 	{
 		super.onExtracted(stack, index);
+		this.target.setChanged();
 
-		ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> target), new EntityExtractTransportationMessage(this.target, index, stack));
+		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new ExtractTransportationMessage(this.target, index, stack));
 	}
 }

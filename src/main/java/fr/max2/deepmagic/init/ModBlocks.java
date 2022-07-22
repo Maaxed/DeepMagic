@@ -22,7 +22,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModBlocks
 {
 	public static final DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, DeepMagicMod.MOD_ID);
-	public static final RegistryObject<Block> TRANSPORTATION_BLOCK = register("transportation_block", () -> new TransportationBlock(Properties.of(Material.STONE)));
+	public static final RegistryObject<Block> TRANSPORTATION_BLOCK = register("transportation_block", () -> new TransportationBlock(Properties.of(Material.STONE).strength(3.0F, 9.0F)));
 
 	public static final RegistryObject<Item> TRANSPORTATION_BLOCK_ITEM = item(TRANSPORTATION_BLOCK);
 

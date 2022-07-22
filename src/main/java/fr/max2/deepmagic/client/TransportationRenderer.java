@@ -70,10 +70,10 @@ public class TransportationRenderer
 	{
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-		renderTransportation(poseStack, buffer, itemRenderer, player, player.getPosition(partialTick).add(0, 0.5, 0), partialTick, player.tickCount, dispatcher.getPackedLightCoords(player, partialTick), player.getId());
+		renderTransportation(poseStack, buffer, itemRenderer, player, player.getPosition(partialTick).add(0, 0.5, 0), partialTick, player.tickCount, dispatcher.getPackedLightCoords(player, partialTick), OverlayTexture.NO_OVERLAY, player.getId());
 	}
 
-	public static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, ItemRenderer itemRenderer, ICapabilityProvider capabilityProvider, Vec3 pos, float partialTick, int tickCount, int packedLight, int randSeed)
+	public static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, ItemRenderer itemRenderer, ICapabilityProvider capabilityProvider, Vec3 pos, float partialTick, int tickCount, int packedLight, int packedOverlay, int randSeed)
 	{
 		capabilityProvider.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 		{
@@ -84,12 +84,12 @@ public class TransportationRenderer
 
 			bth.getIndexStacks((stack, i) ->
 			{
-				renderStack(itemRenderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, stack, pos, partialTick, packedLight, randSeed + i);
+				renderStack(itemRenderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, stack, pos, partialTick, packedLight, packedOverlay, randSeed + i);
 			});
 		});
 	}
 
-	private static void renderStack(ItemRenderer renderer, PoseStack poseStack, MultiBufferSource buffer, float fullTick, float rotAngle, TransportStack stack, Vec3 targetPos, float partialTick, int packedLight, int randSeed)
+	private static void renderStack(ItemRenderer renderer, PoseStack poseStack, MultiBufferSource buffer, float fullTick, float rotAngle, TransportStack stack, Vec3 targetPos, float partialTick, int packedLight, int packedOverlay, int randSeed)
 	{
 		if (stack == null)
 			return;
@@ -104,7 +104,7 @@ public class TransportationRenderer
 		float f = stack.getTransitionFactor(partialTick);
 		poseStack.translate(0f, Mth.sin(fullTick * 0.4f - rotAngle) * 0.2 * f, 1f * f);
 
-		renderer.renderStatic(stack.getStack(), TransformType.GROUND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, randSeed);
+		renderer.renderStatic(stack.getStack(), TransformType.GROUND, packedLight, packedOverlay, poseStack, buffer, randSeed);
 
 		poseStack.popPose();
 	}

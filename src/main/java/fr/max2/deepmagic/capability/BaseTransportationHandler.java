@@ -1,6 +1,5 @@
 package fr.max2.deepmagic.capability;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -8,6 +7,7 @@ import java.util.stream.IntStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -176,9 +176,9 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 		}
 	}
 
-	public List<ItemStack> getDrops()
+	public NonNullList<ItemStack> getDrops()
 	{
-		List<ItemStack> drops = new ArrayList<>();
+		NonNullList<ItemStack> drops = NonNullList.create();
 
 		for (int i = 0; i < this.queueSize; i++)
 		{

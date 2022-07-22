@@ -1,8 +1,8 @@
 package fr.max2.deepmagic.init;
 
 import fr.max2.deepmagic.DeepMagicMod;
-import fr.max2.deepmagic.network.EntityExtractTransportationMessage;
-import fr.max2.deepmagic.network.EntityInsertTransportationMessage;
+import fr.max2.deepmagic.network.ExtractTransportationMessage;
+import fr.max2.deepmagic.network.InsertTransportationMessage;
 import fr.max2.deepmagic.network.EntityReplaceTransportationMessage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,16 +31,16 @@ public class ModNetwork
 	{
 		int id = 0;
 		CHANNEL
-			.messageBuilder(EntityInsertTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
-			.encoder(EntityInsertTransportationMessage::encode)
-			.decoder(EntityInsertTransportationMessage::decode)
-			.consumerMainThread(EntityInsertTransportationMessage::handleMainThread)
+			.messageBuilder(InsertTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+			.encoder(InsertTransportationMessage::encode)
+			.decoder(InsertTransportationMessage::decode)
+			.consumerMainThread(InsertTransportationMessage::handleMainThread)
 			.add();
 		CHANNEL
-			.messageBuilder(EntityExtractTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
-			.encoder(EntityExtractTransportationMessage::encode)
-			.decoder(EntityExtractTransportationMessage::decode)
-			.consumerMainThread(EntityExtractTransportationMessage::handleMainThread)
+			.messageBuilder(ExtractTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+			.encoder(ExtractTransportationMessage::encode)
+			.decoder(ExtractTransportationMessage::decode)
+			.consumerMainThread(ExtractTransportationMessage::handleMainThread)
 			.add();
 		CHANNEL
 			.messageBuilder(EntityReplaceTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)

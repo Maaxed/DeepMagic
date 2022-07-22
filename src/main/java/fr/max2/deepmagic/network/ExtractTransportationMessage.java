@@ -2,51 +2,50 @@ package fr.max2.deepmagic.network;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
-
 import fr.max2.deepmagic.capability.BaseTransportationHandler;
 import fr.max2.deepmagic.capability.CapabilityTransportationHandler;
 import fr.max2.deepmagic.capability.BaseTransportationHandler.TransportStack;
+import fr.max2.deepmagic.util.CapabilityProviderHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class EntityExtractTransportationMessage
+public class ExtractTransportationMessage
 {
-	private final int entityId;
+	private final CapabilityProviderHolder capabilityHolder;
 	private final int index;
 	private final Vec3 targetPos;
 
-	private EntityExtractTransportationMessage(int entityId, int index, Vec3 targetPos)
+	private ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, int index, Vec3 targetPos)
 	{
-		this.entityId = entityId;
+		this.capabilityHolder = capabilityHolder;
 		this.index = index;
 		this.targetPos = targetPos;
 	}
 
-	public EntityExtractTransportationMessage(Entity entity, int index, TransportStack stack)
+	public ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, int index, TransportStack stack)
 	{
-		this(entity.getId(), index, stack.getTargetPosition());
+		this(capabilityHolder, index, stack.getTargetPosition());
 	}
 
 	public void encode(FriendlyByteBuf buf)
 	{
-		buf.writeInt(this.entityId);
+		this.capabilityHolder.encode(buf);
 		buf.writeInt(this.index);
 		buf.writeDouble(this.targetPos.x);
 		buf.writeDouble(this.targetPos.y);
 		buf.writeDouble(this.targetPos.z);
 	}
 
-	public static EntityExtractTransportationMessage decode(FriendlyByteBuf buf)
+	public static ExtractTransportationMessage decode(FriendlyByteBuf buf)
 	{
-		return new EntityExtractTransportationMessage(
-			buf.readInt(),
+		return new ExtractTransportationMessage(
+			CapabilityProviderHolder.decode(buf),
 			buf.readInt(),
 			new Vec3(
 				buf.readDouble(),
@@ -64,17 +63,18 @@ public class EntityExtractTransportationMessage
 	// Client only code
 	private static class ClientHandler
 	{
-		public static void handle(EntityExtractTransportationMessage msg)
+		public static void handle(ExtractTransportationMessage msg)
 		{
 			Level lvl = Minecraft.getInstance().level;
 			if (lvl == null)
 				return;
 
-			Entity entity = lvl.getEntity(msg.entityId);
-			if (entity == null)
+			msg.capabilityHolder.init(lvl);
+			ICapabilityProvider capaProvider = msg.capabilityHolder.getCapabilityProvider();
+			if (capaProvider == null)
 				return;
 
-			entity.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			capaProvider.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
 				if (transportation instanceof BaseTransportationHandler bth)
 				{
