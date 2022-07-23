@@ -7,7 +7,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -54,10 +57,37 @@ public class ConfigurationWandItem extends Item
 	}
 
 	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+	{
+		// Use in the air
+		if (player != null && player.isShiftKeyDown())
+		{
+			ItemStack stack = player.getItemInHand(hand);
+			setTargetPosition(stack, null);
+			return InteractionResultHolder.success(stack);
+		}
+		return super.use(level, player, hand);
+	}
+
+	@Override
 	public void appendHoverText(ItemStack stack, Level level, List<Component> texts, TooltipFlag flags)
 	{
 		// TODO Auto-generated method stub
 		super.appendHoverText(stack, level, texts, flags);
+	}
+
+	@Override
+	public void inventoryTick(ItemStack stack, Level level, Entity player, int slotIndex, boolean selected)
+	{
+		BlockPos targetPos = getTargetPosition(stack);
+		if (!level.isClientSide || targetPos == null)
+			return;
+
+		BlockEntity targetBe = level.getBlockEntity(targetPos);
+		if (!(targetBe instanceof TransportationBlockEntity tbe))
+			return;
+
+		tbe.renderEffect();
 	}
 
 	@Override
@@ -76,6 +106,13 @@ public class ConfigurationWandItem extends Item
 
 	private static void setTargetPosition(ItemStack stack, BlockPos pos)
 	{
-		stack.getOrCreateTag().put(TARGET_POSITION_NBT, NbtUtils.writeBlockPos(pos));
+		if (pos == null)
+		{
+			stack.removeTagKey(TARGET_POSITION_NBT);
+		}
+		else
+		{
+			stack.addTagElement(TARGET_POSITION_NBT, NbtUtils.writeBlockPos(pos));
+		}
 	}
 }
