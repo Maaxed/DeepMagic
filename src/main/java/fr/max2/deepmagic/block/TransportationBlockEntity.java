@@ -143,6 +143,28 @@ public class TransportationBlockEntity extends BlockEntity
 		return super.getCapability(cap, side);
 	}
 
+	public void setTransportationTarget(BlockPos targetPos, Direction targetFace, boolean insert)
+	{
+		Action action = new Action(targetPos, targetFace, insert);
+
+		if (this.actions.isEmpty())
+		{
+			this.actions.add(action);
+		}
+		else if (this.actions.get(0).insert == insert)
+		{
+			this.actions.set(0, action);
+		}
+		else if (this.actions.size() >= 2)
+		{
+			this.actions.set(1, action);
+		}
+		else
+		{
+			this.actions.add(insert ? 1 : 0, action);
+		}
+	}
+
 	protected void tick()
 	{
 		this.transportationHandler.update();

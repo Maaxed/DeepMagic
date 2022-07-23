@@ -25,9 +25,9 @@ public class TransportationWandItem extends Item
     private static final int USE_TIME = 5; // 0.25sec
 
 
-    public TransportationWandItem(Properties properteies)
+    public TransportationWandItem(Properties properties)
     {
-        super(properteies.stacksTo(1));
+        super(properties.stacksTo(1));
     }
 
     @Override
