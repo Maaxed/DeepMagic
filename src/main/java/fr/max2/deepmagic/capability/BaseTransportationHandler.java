@@ -319,13 +319,13 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 				f1 = 1.0f;
 
 			if (this.targetPosition == null)
-				return f1;
+				return f1 * (2.0f - f1);
 
 			float f2 = (this.targetTicks + partialTick) / TRANSFERT_TIME;
 			if (f2 > 1.0f)
 				f2 = 1.0f;
 
-			return Math.min(f1, 1.0f - f2);
+			return Math.min(f1, 1.0f - (f2 * f2));
 		}
 
 		public Vec3 getCurrentPosition(Vec3 targetPos, float partialTick)
@@ -334,7 +334,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 			if (f1 > 1.0f)
 				f1 = 1.0f;
 
-			Vec3 pos = this.originPosition.lerp(targetPos, f1);
+			Vec3 pos = this.originPosition.lerp(targetPos, f1 * (2.0f - f1));
 
 			if (this.targetPosition == null)
 				return pos;
@@ -343,7 +343,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 			if (f2 > 1.0f)
 				f2 = 1.0f;
 
-			return pos.lerp(this.targetPosition, f2);
+			return pos.lerp(this.targetPosition, f2*f2);
 		}
 
 		public int getTicksAlive()
