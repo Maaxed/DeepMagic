@@ -28,10 +28,11 @@ public class ConfigurationWandItem extends Item
 	@Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context)
     {
-		BlockEntity be = context.getLevel().getBlockEntity(context.getClickedPos());
+		BlockPos clickPos = context.getClickedPos();
+		BlockEntity be = context.getLevel().getBlockEntity(clickPos);
 		if (be instanceof TransportationBlockEntity tbe)
 		{
-			setTargetPosition(stack, context.getClickedPos());
+			setTargetPosition(stack, clickPos);
 			return InteractionResult.SUCCESS;
 		}
 		else
@@ -47,7 +48,7 @@ public class ConfigurationWandItem extends Item
 			Player player = context.getPlayer();
 			boolean insert = player != null && player.isShiftKeyDown();
 
-			tbe.setTransportationTarget(context.getClickedPos(), context.getClickedFace(), insert);
+			tbe.setTransportationTarget(clickPos, context.getClickedFace(), insert);
 			return InteractionResult.SUCCESS;
 		}
 	}

@@ -38,7 +38,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 	@Override
 	public boolean isFull()
 	{
-		return this.queueSize >= this.itemQueue.length - 1;
+		return this.queueSize >= this.itemQueue.length;
 	}
 
 	@Override
@@ -213,16 +213,19 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 		if (index < 0 || index >= this.itemQueue.length)
 			return false;
 
-		int endIndex = (this.queueStartIndex + this.queueSize) % this.itemQueue.length;
-		if (endIndex < this.queueStartIndex)
+		if (!this.isFull())
 		{
-			if (index >= endIndex && index < this.queueStartIndex)
-				return false;
-		}
-		else
-		{
-			if (index >= endIndex || index < this.queueStartIndex)
-				return false;
+			int endIndex = (this.queueStartIndex + this.queueSize) % this.itemQueue.length;
+			if (endIndex < this.queueStartIndex)
+			{
+				if (index >= endIndex && index < this.queueStartIndex)
+					return false;
+			}
+			else
+			{
+				if (index >= endIndex || index < this.queueStartIndex)
+					return false;
+			}
 		}
 
 		int oldStart = this.queueStartIndex;

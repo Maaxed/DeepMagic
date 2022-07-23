@@ -35,6 +35,7 @@ public class TransportationBlockEntity extends BlockEntity
 	private static final int USE_COUNT = 16;
 	private static final int USE_TIME = 5; // 0.25sec
 	private static final int SWITCH_TIME = 20; // 1sec
+	private static final int MAX_USE_DISTANCE = 32;
 
 	private CompoundTag handlerTag = null;
 	private BaseTransportationHandler transportationHandler = null;
@@ -145,6 +146,9 @@ public class TransportationBlockEntity extends BlockEntity
 
 	public void setTransportationTarget(BlockPos targetPos, Direction targetFace, boolean insert)
 	{
+		if (targetPos.distSqr(this.getBlockPos()) > MAX_USE_DISTANCE * MAX_USE_DISTANCE)
+			return;
+
 		Action action = new Action(targetPos, targetFace, insert);
 
 		if (this.actions.isEmpty())
