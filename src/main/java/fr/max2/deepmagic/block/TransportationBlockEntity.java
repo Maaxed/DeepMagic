@@ -13,11 +13,12 @@ import fr.max2.deepmagic.capability.ITransportationHandler;
 import fr.max2.deepmagic.capability.SyncTransportationHandler;
 import fr.max2.deepmagic.capability.TransportationUtils;
 import fr.max2.deepmagic.init.ModBlocks;
+import fr.max2.deepmagic.init.ModNetwork;
+import fr.max2.deepmagic.network.BlockReplaceActionMessage;
 import fr.max2.deepmagic.util.CapabilityProviderHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.VibrationParticleOption;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -26,12 +27,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.PacketDistributor;
 
 public class TransportationBlockEntity extends BlockEntity
 {
@@ -50,9 +51,6 @@ public class TransportationBlockEntity extends BlockEntity
 	public TransportationBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
 	{
 		super(type, pos, state);
-
-		this.actions.add(new Action(pos.north(2), Direction.SOUTH, false));
-		this.actions.add(new Action(pos.south(2), Direction.NORTH, true));
 	}
 
 	@Override
@@ -80,6 +78,13 @@ public class TransportationBlockEntity extends BlockEntity
 	protected void saveAdditional(CompoundTag tags)
 	{
 		super.saveAdditional(tags);
+		saveCommonData(tags);
+		tags.putInt("currentAction", this.currentAction);
+		tags.putInt("actionTimer", this.actionTimer);
+	}
+
+	private void saveCommonData(CompoundTag tags)
+	{
 		if (this.transportationHandler != null)
 		{
 			tags.put("content", this.transportationHandler.serializeNBT());
@@ -87,7 +92,6 @@ public class TransportationBlockEntity extends BlockEntity
 		else if (this.handlerTag != null)
 		{
 			tags.put("content", this.handlerTag);
-
 		}
 		ListTag actions = new ListTag();
 		for (Action action : this.actions)
@@ -95,8 +99,6 @@ public class TransportationBlockEntity extends BlockEntity
 			actions.add(action.toTag());
 		}
 		tags.put("actions", actions);
-		tags.putInt("currentAction", this.currentAction);
-		tags.putInt("actionTimer", this.actionTimer);
 	}
 
 	@Override
@@ -126,15 +128,7 @@ public class TransportationBlockEntity extends BlockEntity
 	public CompoundTag getUpdateTag()
 	{
 		CompoundTag tags = super.getUpdateTag();
-		if (this.transportationHandler != null)
-		{
-			tags.put("content", this.transportationHandler.serializeNBT());
-		}
-		else if (this.handlerTag != null)
-		{
-			tags.put("content", this.handlerTag);
-
-		}
+		saveCommonData(tags);
 		return tags;
 	}
 
@@ -145,6 +139,20 @@ public class TransportationBlockEntity extends BlockEntity
 			return this.lazyCapa.cast();
 
 		return super.getCapability(cap, side);
+	}
+
+	public List<Action> getActions()
+	{
+		return List.copyOf(actions);
+	}
+
+	public void setActions(List<Action> actions)
+	{
+		this.actions.clear();
+		this.actions.addAll(actions);
+		this.currentAction = 0;
+		this.actionTimer = 0;
+		this.setChanged();
 	}
 
 	public void setTransportationTarget(BlockPos targetPos, Direction targetFace, boolean insert)
@@ -170,6 +178,12 @@ public class TransportationBlockEntity extends BlockEntity
 		{
 			this.actions.add(insert ? 1 : 0, action);
 		}
+		this.actionTimer = 0;
+
+		this.setChanged();
+
+		if (!this.getLevel().isClientSide)
+			ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> this.getLevel().getChunkAt(this.getBlockPos())), new BlockReplaceActionMessage(this));
 	}
 
 	protected void tick()
@@ -180,6 +194,7 @@ public class TransportationBlockEntity extends BlockEntity
 			return;
 
 		updateAction();
+		this.setChanged();
 	}
 
 	protected void updateAction()
@@ -246,9 +261,9 @@ public class TransportationBlockEntity extends BlockEntity
 
 	public static class Action
 	{
-		private final BlockPos pos;
-		private final Direction face;
-		private final boolean insert;
+		public final BlockPos pos;
+		public final Direction face;
+		public final boolean insert;
 		private LazyOptional<IItemHandler> capa = LazyOptional.empty();
 
 		public Action(BlockPos pos, Direction face, boolean insert)

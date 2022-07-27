@@ -3,6 +3,7 @@ package fr.max2.deepmagic.init;
 import fr.max2.deepmagic.DeepMagicMod;
 import fr.max2.deepmagic.network.ExtractTransportationMessage;
 import fr.max2.deepmagic.network.InsertTransportationMessage;
+import fr.max2.deepmagic.network.BlockReplaceActionMessage;
 import fr.max2.deepmagic.network.EntityReplaceTransportationMessage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,6 +48,12 @@ public class ModNetwork
 			.encoder(EntityReplaceTransportationMessage::encode)
 			.decoder(EntityReplaceTransportationMessage::decode)
 			.consumerMainThread(EntityReplaceTransportationMessage::handleMainThread)
+			.add();
+		CHANNEL
+			.messageBuilder(BlockReplaceActionMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+			.encoder(BlockReplaceActionMessage::encode)
+			.decoder(BlockReplaceActionMessage::decode)
+			.consumerMainThread(BlockReplaceActionMessage::handleMainThread)
 			.add();
 	}
 }

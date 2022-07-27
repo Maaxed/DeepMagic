@@ -18,7 +18,6 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class EntityReplaceTransportationMessage
 {
-
 	private final int entityId;
 	private final List<TransportStack> stacks;
 
@@ -90,14 +89,15 @@ public class EntityReplaceTransportationMessage
 	// Client only code
 	private static class ClientHandler
 	{
-
 		public static void handle(EntityReplaceTransportationMessage msg)
 		{
 			Level lvl = Minecraft.getInstance().level;
-			if (lvl == null) return;
+			if (lvl == null)
+				return;
 
 			Entity entity = lvl.getEntity(msg.entityId);
-			if (entity == null) return;
+			if (entity == null)
+				return;
 
 			entity.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
