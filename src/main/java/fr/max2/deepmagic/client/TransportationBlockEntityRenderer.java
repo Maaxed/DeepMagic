@@ -39,7 +39,7 @@ public class TransportationBlockEntityRenderer implements BlockEntityRenderer<Tr
 		poseStack.pushPose();
 		BlockPos pos = be.getBlockPos();
 		poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-		TransportationRenderer.renderTransportation(poseStack, buffer, this.itemRenderer, be, Vec3.atCenterOf(pos), partialTicks, (int)be.getLevel().getGameTime(), combinedLight, combinedOverlay, be.getBlockPos().hashCode());
+		TransportationRenderer.renderTransportation(poseStack, buffer, this.itemRenderer, be, Vec3.atCenterOf(pos).add(0.0, 0.5, 0.0), partialTicks, (int)be.getLevel().getGameTime(), combinedLight, combinedOverlay, be.getBlockPos().hashCode());
 		poseStack.popPose();
 	}
 }

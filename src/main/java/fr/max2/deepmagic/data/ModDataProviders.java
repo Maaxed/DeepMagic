@@ -19,6 +19,7 @@ public class ModDataProviders
 
 		gen.addProvider(event.includeServer(), new ModRecipeProvider(gen));
 
+		gen.addProvider(event.includeClient(), new ModBlockStateProvider(gen, files));
 		gen.addProvider(event.includeClient(), new ModItemModelProvider(gen, files));
 		gen.addProvider(event.includeClient(), new ModLanguagesProvider(gen));
 	}

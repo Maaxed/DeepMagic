@@ -11,7 +11,7 @@ public class ModItemGroups
 		@Override
 		public ItemStack makeIcon()
 		{
-			return new ItemStack(ModItems.DEEP_DARK_DUST.get());
+			return new ItemStack(ModItems.DEEP_DARK_PEARL.get());
 		}
 	};
 }

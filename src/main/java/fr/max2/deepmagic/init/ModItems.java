@@ -18,10 +18,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems
 {
 	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, DeepMagicMod.MOD_ID);
-	public static final RegistryObject<Item> DEEP_DARK_DUST = register("deep_dark_dust", Item::new);
-	public static final RegistryObject<Item> DEEP_DARK_PEARL = register("deep_dark_pearl", Item::new);
-	public static final RegistryObject<TransportationWandItem> TRANSPORTATION_WAND = register("transportation_wand", TransportationWandItem::new);
-	public static final RegistryObject<ConfigurationWandItem> CONFIGURATION_WAND = register("configuration_wand", ConfigurationWandItem::new);
+	public static final RegistryObject<Item> DEEP_DARK_PEARL = register("black_hole", Item::new);
+	public static final RegistryObject<TransportationWandItem> TRANSPORTATION_WAND = register("black_hole_wand", TransportationWandItem::new);
+	public static final RegistryObject<ConfigurationWandItem> CONFIGURATION_WAND = register("black_hole_configurator", ConfigurationWandItem::new);
 
 	private static final Supplier<Properties> DEFAULT_PROPERTIES = () -> new Properties().tab(ModItemGroups.MAIN_TAB);
 

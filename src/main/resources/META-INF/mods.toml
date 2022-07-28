@@ -29,7 +29,7 @@ displayURL="https://github.com/LeBossMax2/deepmagic" #optional
 # A text field displayed in the mod UI
 # credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
-authors="LeBossMax2" #optional
+authors="LeBossMax2, _ALRO_" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 A mod made during the ForgeJam22.

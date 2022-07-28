@@ -2,12 +2,14 @@ package fr.max2.deepmagic.data;
 
 import java.util.function.Consumer;
 
+import fr.max2.deepmagic.init.ModBlocks;
 import fr.max2.deepmagic.init.ModItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 
 public class ModRecipeProvider extends RecipeProvider
 {
@@ -16,7 +18,7 @@ public class ModRecipeProvider extends RecipeProvider
 	{
 		super(generatorIn);
 	}
-	
+
 	@Override
 	protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer)
 	{
@@ -25,22 +27,38 @@ public class ModRecipeProvider extends RecipeProvider
 			.pattern("SES")
 			.pattern("SSS")
 			.define('S', Items.ECHO_SHARD)
-			.define('E', Items.ENDER_EYE)
+			.define('E', Items.ENDER_PEARL)
 			.unlockedBy("has_echo_shard", has(Items.ECHO_SHARD))
 			.save(consumer);
 		ShapedRecipeBuilder.shaped(ModItems.TRANSPORTATION_WAND.get())
 			.pattern(" P")
-			.pattern("S ")
+			.pattern("/ ")
 			.define('P', ModItems.DEEP_DARK_PEARL.get())
-			.define('S', Items.STICK)
+			.define('/', Items.STICK)
+			.unlockedBy("has_deep_dark_pearl", has(ModItems.DEEP_DARK_PEARL.get()))
+			.save(consumer);
+		ShapedRecipeBuilder.shaped(ModItems.CONFIGURATION_WAND.get())
+			.pattern(" S")
+			.pattern("/ ")
+			.define('S', Items.ECHO_SHARD)
+			.define('/', Items.STICK)
+			.unlockedBy("has_deep_dark_pearl", has(ModItems.DEEP_DARK_PEARL.get()))
+			.save(consumer);
+		ShapedRecipeBuilder.shaped(ModBlocks.TRANSPORTATION_BLOCK_ITEM.get())
+			.pattern(" P ")
+			.pattern("S#S")
+			.pattern("###")
+			.define('P', ModItems.DEEP_DARK_PEARL.get())
+			.define('S', Items.ECHO_SHARD)
+			.define('#', Blocks.COBBLESTONE)
 			.unlockedBy("has_deep_dark_pearl", has(ModItems.DEEP_DARK_PEARL.get()))
 			.save(consumer);
 	}
-	
+
 	@Override
 	public String getName()
 	{
 		return "DeepMagic Recipes";
 	}
-	
+
 }

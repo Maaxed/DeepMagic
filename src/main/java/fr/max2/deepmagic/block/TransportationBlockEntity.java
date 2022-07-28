@@ -236,7 +236,7 @@ public class TransportationBlockEntity extends BlockEntity
 	{
 		Vec3 pos1 = Vec3.atCenterOf(this.getBlockPos());
 		level.addParticle(ParticleTypes.PORTAL, pos1.x, pos1.y, pos1.z, level.random.nextGaussian() * 0.3, -0.2, level.random.nextGaussian() * 0.3);
-		if (this.level.dayTime() % 5 != 0)
+		if (this.level.dayTime() % 2 != 0)
 			return;
 
 		for (Action action : this.actions)
