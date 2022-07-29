@@ -73,13 +73,13 @@ public class TransportationRenderer
 		renderTransportation(poseStack, buffer, itemRenderer, player, player.getPosition(partialTick).add(0, 0.5, 0), partialTick, player.tickCount, dispatcher.getPackedLightCoords(player, partialTick), OverlayTexture.NO_OVERLAY, player.getId());
 	}
 
-	public static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, ItemRenderer itemRenderer, ICapabilityProvider capabilityProvider, Vec3 pos, float partialTick, int tickCount, int packedLight, int packedOverlay, int randSeed)
+	public static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, ItemRenderer itemRenderer, ICapabilityProvider capabilityProvider, Vec3 pos, float partialTick, long tickCount, int packedLight, int packedOverlay, int randSeed)
 	{
 		capabilityProvider.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 		{
 			if (!(transportation instanceof ClientTransportationHandler bth)) return;
 
-			float fullTick = tickCount + partialTick;
+			double fullTick = (double)tickCount + partialTick;
 			int stackCount = bth.getSize();
 
 			bth.getIndexStacks((stack, i) ->
@@ -89,7 +89,7 @@ public class TransportationRenderer
 		});
 	}
 
-	private static void renderStack(ItemRenderer renderer, PoseStack poseStack, MultiBufferSource buffer, float fullTick, float rotAngle, TransportStack stack, Vec3 targetPos, float partialTick, int packedLight, int packedOverlay, int randSeed)
+	private static void renderStack(ItemRenderer renderer, PoseStack poseStack, MultiBufferSource buffer, double fullTick, float rotAngle, TransportStack stack, Vec3 targetPos, float partialTick, int packedLight, int packedOverlay, int randSeed)
 	{
 		if (stack == null)
 			return;
@@ -99,10 +99,10 @@ public class TransportationRenderer
 		Vec3 pos = stack.getCurrentPosition(targetPos, partialTick);
 		poseStack.translate(pos.x, pos.y, pos.z);
 
-		poseStack.mulPose(Quaternion.fromXYZ(0.0f, fullTick * 0.2f - rotAngle, 0.0f));
+		poseStack.mulPose(Quaternion.fromXYZ(0.0f, (float)((fullTick * 0.2) % Mth.TWO_PI) - rotAngle, 0.0f));
 
 		float f = stack.getTransitionFactor(partialTick);
-		poseStack.translate(0f, Mth.sin(fullTick * 0.4f - rotAngle) * 0.2 * f, 1f * f);
+		poseStack.translate(0.0, Math.sin(fullTick * 0.4 - rotAngle) * 0.2 * f, 1.0 * f);
 
 		renderer.renderStatic(stack.getStack(), TransformType.GROUND, packedLight, packedOverlay, poseStack, buffer, randSeed);
 

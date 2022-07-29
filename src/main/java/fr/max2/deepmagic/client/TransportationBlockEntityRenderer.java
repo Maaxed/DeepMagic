@@ -47,10 +47,13 @@ public class TransportationBlockEntityRenderer implements BlockEntityRenderer<Tr
 	public void render(TransportationBlockEntity be, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
 	{
 		int randomSeed = be.getBlockPos().hashCode();
+		long tickCount = be.getLevel().getGameTime();
+		double fullTick = tickCount + partialTicks;
 
 		// Render black hole
 		poseStack.pushPose();
 		poseStack.translate(0.5, 1.25, 0.5);
+		poseStack.translate(0.0, Math.sin(fullTick * 0.04 + randomSeed) * 0.0625, 0.0);
 		poseStack.scale(2.0f, 2.0f, 2.0f);
 
 		Camera cam = Minecraft.getInstance().gameRenderer.getMainCamera();
@@ -75,7 +78,7 @@ public class TransportationBlockEntityRenderer implements BlockEntityRenderer<Tr
 		poseStack.pushPose();
 		BlockPos pos = be.getBlockPos();
 		poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-		TransportationRenderer.renderTransportation(poseStack, buffer, this.itemRenderer, be, Vec3.atCenterOf(pos).add(0.0, 0.5, 0.0), partialTicks, (int)be.getLevel().getGameTime(), combinedLight, combinedOverlay, randomSeed + 1);
+		TransportationRenderer.renderTransportation(poseStack, buffer, this.itemRenderer, be, Vec3.atCenterOf(pos).add(0.0, 0.5, 0.0), partialTicks, tickCount, combinedLight, combinedOverlay, randomSeed + 1);
 		poseStack.popPose();
 	}
 }
