@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -257,6 +258,13 @@ public class TransportationBlockEntity extends BlockEntity
 			}
 
 		}
+	}
+
+	@Override
+	public AABB getRenderBoundingBox()
+	{
+		BlockPos pos = this.getBlockPos();
+		return new AABB(pos.offset(-1, 0, -1), pos.offset(2, 2, 2));
 	}
 
 	public static class Action
