@@ -18,25 +18,25 @@ import net.minecraftforge.network.NetworkEvent;
 public class ExtractTransportationMessage
 {
 	private final CapabilityProviderHolder capabilityHolder;
-	private final int index;
+	private final int count;
 	private final Vec3 targetPos;
 
-	private ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, int index, Vec3 targetPos)
+	private ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, int count, Vec3 targetPos)
 	{
 		this.capabilityHolder = capabilityHolder;
-		this.index = index;
+		this.count = count;
 		this.targetPos = targetPos;
 	}
 
-	public ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, int index, TransportStack stack)
+	public ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, TransportStack stack)
 	{
-		this(capabilityHolder, index, stack.getTargetPosition());
+		this(capabilityHolder, stack.getStack().getCount(), stack.getTargetPosition());
 	}
 
 	public void encode(FriendlyByteBuf buf)
 	{
 		this.capabilityHolder.encode(buf);
-		buf.writeInt(this.index);
+		buf.writeInt(this.count);
 		buf.writeDouble(this.targetPos.x);
 		buf.writeDouble(this.targetPos.y);
 		buf.writeDouble(this.targetPos.z);
@@ -78,7 +78,7 @@ public class ExtractTransportationMessage
 			{
 				if (transportation instanceof BaseTransportationHandler bth)
 				{
-					bth.extractItemAt(msg.index, msg.targetPos);
+					bth.extractItem(msg.count, msg.targetPos, false);
 				}
 			});
 		}

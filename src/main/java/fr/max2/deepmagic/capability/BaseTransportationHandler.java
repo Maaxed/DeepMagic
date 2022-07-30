@@ -18,8 +18,10 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BaseTransportationHandler implements ITransportationHandler, INBTSerializable<CompoundTag>
 {
+	/** Content of the circular queue **/
 	protected TransportStack[] itemQueue;
 	protected int queueStartIndex;
+	/** Number of elements currently in the queue **/
 	protected int queueSize;
 
 	public BaseTransportationHandler(int capacity)
@@ -78,21 +80,29 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 			}
 			else
 			{
-				head.setTarget(targetPosition);
+				// Remove element from the queue
 				this.itemQueue[extractIndex] = null;
 				this.queueStartIndex = (this.queueStartIndex + 1) % this.itemQueue.length;
 				this.queueSize--;
+
+				head.setTarget(targetPosition);
 				this.onExtracted(head, extractIndex);
 				return head.getStack();
 			}
 		}
 		else
 		{
+			ItemStack extractedStack = ItemHandlerHelper.copyStackWithSize(head.getStack(), toExtract);
 			if (!simulate)
 			{
+				// Remove part of the stack
 				this.itemQueue[extractIndex] = head.copyWithSize(stack.getCount() - toExtract);
+
+				TransportStack extracted = new TransportStack(extractedStack, head.getOriginPosition(), head.getTicksAlive());
+				extracted.setTarget(targetPosition);
+				this.onExtracted(extracted, extractIndex);
 			}
-			return ItemHandlerHelper.copyStackWithSize(head.getStack(), toExtract);
+			return extractedStack;
 		}
 	}
 
@@ -191,63 +201,6 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 		}
 
 		return drops;
-	}
-
-	public boolean insertItemAt(int index, @Nullable TransportStack stack)
-	{
-		if (index < 0 || index >= this.itemQueue.length)
-			return false;
-
-		int expectedSize = (index - this.queueStartIndex + this.itemQueue.length) % this.itemQueue.length + 1;
-
-		if (this.queueSize < expectedSize)
-			this.queueSize = expectedSize;
-
-		this.itemQueue[index] = stack;
-		this.onInserted(stack, index);
-		return true;
-	}
-
-	public boolean extractItemAt(int index, Vec3 targetPosition)
-	{
-		if (index < 0 || index >= this.itemQueue.length)
-			return false;
-
-		if (!this.isFull())
-		{
-			int endIndex = (this.queueStartIndex + this.queueSize) % this.itemQueue.length;
-			if (endIndex < this.queueStartIndex)
-			{
-				if (index >= endIndex && index < this.queueStartIndex)
-					return false;
-			}
-			else
-			{
-				if (index >= endIndex || index < this.queueStartIndex)
-					return false;
-			}
-		}
-
-		int oldStart = this.queueStartIndex;
-		int newStart = (index + 1) % this.itemQueue.length;
-		int removedCount = (newStart - this.queueStartIndex + this.itemQueue.length) % this.itemQueue.length;
-		this.queueSize -= removedCount;
-		this.queueStartIndex = newStart;
-
-		for (int i = 0; i < removedCount; i++)
-		{
-			int removeIndex = (oldStart + i) % this.itemQueue.length;
-
-			TransportStack stack = this.itemQueue[removeIndex];
-			if (stack == null || stack.getStack().isEmpty())
-				continue;
-
-			stack.setTarget(targetPosition);
-			this.itemQueue[removeIndex] = null;
-			this.onExtracted(stack, removeIndex);
-		}
-
-		return true;
 	}
 
 	public boolean replaceContent(List<TransportStack> newContent)

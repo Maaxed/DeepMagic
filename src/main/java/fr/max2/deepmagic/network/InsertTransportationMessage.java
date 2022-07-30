@@ -19,27 +19,24 @@ import net.minecraftforge.network.NetworkEvent;
 public class InsertTransportationMessage
 {
 	private final CapabilityProviderHolder capabilityHolder;
-	private final int index;
 	private final ItemStack stack;
 	private final Vec3 pos;
 
-	private InsertTransportationMessage(CapabilityProviderHolder capabilityHolder, int index, ItemStack stack, Vec3 pos)
+	private InsertTransportationMessage(CapabilityProviderHolder capabilityHolder, ItemStack stack, Vec3 pos)
 	{
 		this.capabilityHolder = capabilityHolder;
-		this.index = index;
 		this.stack = stack;
 		this.pos = pos;
 	}
 
-	public InsertTransportationMessage(CapabilityProviderHolder capabilityHolder, int index, TransportStack stack)
+	public InsertTransportationMessage(CapabilityProviderHolder capabilityHolder, TransportStack stack)
 	{
-		this(capabilityHolder, index, stack.getStack(), stack.getOriginPosition());
+		this(capabilityHolder, stack.getStack(), stack.getOriginPosition());
 	}
 
 	public void encode(FriendlyByteBuf buf)
 	{
 		this.capabilityHolder.encode(buf);
-		buf.writeInt(this.index);
 		buf.writeItem(this.stack);
 		buf.writeDouble(this.pos.x);
 		buf.writeDouble(this.pos.y);
@@ -50,7 +47,6 @@ public class InsertTransportationMessage
 	{
 		return new InsertTransportationMessage(
 			CapabilityProviderHolder.decode(buf),
-			buf.readInt(),
 			buf.readItem(),
 			new Vec3(
 				buf.readDouble(),
@@ -83,7 +79,7 @@ public class InsertTransportationMessage
 			{
 				if (transportation instanceof BaseTransportationHandler bth)
 				{
-					bth.insertItemAt(msg.index, new TransportStack(msg.stack, msg.pos));
+					bth.insertItem(msg.stack, msg.pos);
 				}
 			});
 		}

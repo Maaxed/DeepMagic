@@ -21,7 +21,7 @@ public class SyncTransportationHandler extends BaseTransportationHandler
 		super.onInserted(stack, index);
 		this.target.setChanged();
 
-		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new InsertTransportationMessage(this.target, index, stack));
+		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new InsertTransportationMessage(this.target, stack));
 	}
 
 	@Override
@@ -30,6 +30,6 @@ public class SyncTransportationHandler extends BaseTransportationHandler
 		super.onExtracted(stack, index);
 		this.target.setChanged();
 
-		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new ExtractTransportationMessage(this.target, index, stack));
+		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new ExtractTransportationMessage(this.target, stack));
 	}
 }
