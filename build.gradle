@@ -19,7 +19,6 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run/client')
-            taskName "$project.name-runClient"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'REGISTRIES'
@@ -39,7 +38,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run/server')
-            taskName "$project.name-runServer"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'REGISTRIES'
@@ -62,7 +60,6 @@ minecraft {
         // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
             workingDirectory project.file('run/test')
-            taskName "$project.name-runTestServer"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'REGISTRIES'
@@ -82,7 +79,6 @@ minecraft {
 
         data {
             workingDirectory project.file('run/data')
-            taskName "$project.name-runData"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'REGISTRIES'
