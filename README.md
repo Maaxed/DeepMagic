@@ -1,4 +1,4 @@
-# DeepMagic
+# GravitationalSorcery
 
 A mod made for the ForgeJam 2022 by Maaxed and \_ALRO\_ !
 
