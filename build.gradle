@@ -6,7 +6,7 @@ plugins {
 
 version = '1.0'
 group = 'fr.maaxed.gravitationalsorcery' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'gravitationalsorcery'
+archivesBaseName = 'GravitationalSorcery'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
