@@ -74,11 +74,11 @@ public class ExtractGravitationMessage
 			if (capaProvider == null)
 				return;
 
-			capaProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			capaProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(gravitation ->
 			{
-				if (transportation instanceof BaseGravitationHandler bth)
+				if (gravitation instanceof BaseGravitationHandler baseGravitation)
 				{
-					bth.extractItem(msg.count, msg.targetPos, false);
+					baseGravitation.extractItem(msg.count, msg.targetPos, false);
 				}
 			});
 		}

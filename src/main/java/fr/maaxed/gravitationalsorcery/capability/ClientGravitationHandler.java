@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ClientTransportationHandler extends BaseGravitationHandler
+public class ClientGravitationHandler extends BaseGravitationHandler
 {
 	private final List<IndexStack> extracted = new ArrayList<>();
-	public ClientTransportationHandler(int capacity)
+	public ClientGravitationHandler(int capacity)
 	{
 		super(capacity);
 	}

@@ -50,6 +50,7 @@ public class BaseGravitationHandler implements IGravitationHandler, INBTSerializ
 			return false;
 
 		TransportStack ts = new TransportStack(stack, originPosition);
+		// Insert in the queue
 		int index = (this.queueStartIndex + this.queueSize) % this.itemQueue.length;
 		this.itemQueue[index] = ts;
 		this.queueSize++;
@@ -76,7 +77,7 @@ public class BaseGravitationHandler implements IGravitationHandler, INBTSerializ
 		{
 			if (simulate)
 			{
-				return head.getStack().copy();
+				return stack.copy();
 			}
 			else
 			{
@@ -87,12 +88,12 @@ public class BaseGravitationHandler implements IGravitationHandler, INBTSerializ
 
 				head.setTarget(targetPosition);
 				this.onExtracted(head, extractIndex);
-				return head.getStack();
+				return stack;
 			}
 		}
 		else
 		{
-			ItemStack extractedStack = ItemHandlerHelper.copyStackWithSize(head.getStack(), toExtract);
+			ItemStack extractedStack = ItemHandlerHelper.copyStackWithSize(stack, toExtract);
 			if (!simulate)
 			{
 				// Remove part of the stack

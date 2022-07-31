@@ -11,7 +11,6 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ModBlockStateProvider extends BlockStateProvider
 {
-
 	public ModBlockStateProvider(DataGenerator generator, ExistingFileHelper existingFileHelper)
 	{
 		super(generator, GravitationalSorceryMod.MOD_ID, existingFileHelper);
@@ -29,5 +28,4 @@ public class ModBlockStateProvider extends BlockStateProvider
 	{
 		return "GravitationalSorcery Block States";
 	}
-
 }

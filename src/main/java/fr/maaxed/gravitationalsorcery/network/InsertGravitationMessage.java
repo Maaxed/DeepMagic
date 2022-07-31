@@ -75,11 +75,11 @@ public class InsertGravitationMessage
 			if (capaProvider == null)
 				return;
 
-			capaProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			capaProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(gravitation ->
 			{
-				if (transportation instanceof BaseGravitationHandler bth)
+				if (gravitation instanceof BaseGravitationHandler baseGravitation)
 				{
-					bth.insertItem(msg.stack, msg.pos);
+					baseGravitation.insertItem(msg.stack, msg.pos);
 				}
 			});
 		}

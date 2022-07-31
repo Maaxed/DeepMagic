@@ -9,6 +9,9 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PacketDistributor.PacketTarget;
 
+/**
+ * A reference to a ICapabilityProvider that can be sent through network
+ */
 public interface CapabilityProviderHolder
 {
 	boolean isValid();

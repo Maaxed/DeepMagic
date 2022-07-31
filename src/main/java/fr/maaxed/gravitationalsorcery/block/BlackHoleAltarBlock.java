@@ -77,13 +77,13 @@ public class BlackHoleAltarBlock extends Block implements EntityBlock
 		BlockEntity be = lvl.getBlockEntity(pos);
 		if (be != null)
 		{
-			// Drop transportation items
-			be.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			// Drop gravitation items
+			be.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(gravitation ->
 			{
-				if (!(transportation instanceof BaseGravitationHandler bth))
+				if (!(gravitation instanceof BaseGravitationHandler baseGravitation))
 					return;
 
-				Containers.dropContents(lvl, pos, bth.getDrops());
+				Containers.dropContents(lvl, pos, baseGravitation.getDrops());
 			});
 		}
 

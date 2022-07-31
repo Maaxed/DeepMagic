@@ -16,7 +16,6 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 
 public class ModItemModelProvider extends ItemModelProvider
 {
-
 	public ModItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper)
 	{
 		super(generator, GravitationalSorceryMod.MOD_ID, existingFileHelper);
@@ -67,5 +66,4 @@ public class ModItemModelProvider extends ItemModelProvider
 	{
 		return "GravitationalSorcery Item Models";
 	}
-
 }

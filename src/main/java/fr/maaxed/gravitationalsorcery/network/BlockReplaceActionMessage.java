@@ -73,10 +73,10 @@ public class BlockReplaceActionMessage
 			if (lvl == null)
 				return;
 
-			if (!(lvl.getBlockEntity(msg.blockPos) instanceof BlackHoleAltarBlockEntity tbe))
+			if (!(lvl.getBlockEntity(msg.blockPos) instanceof BlackHoleAltarBlockEntity altarBlockEntity))
 				return;
 
-			tbe.setActions(msg.actions);
+			altarBlockEntity.setActions(msg.actions);
 		}
 	}
 }

@@ -9,9 +9,9 @@ public class GravitationUtils
 {
 	private static final int STACK_SIZE = 8;
 
-	public static boolean extract(IGravitationHandler transportation, IItemHandler inventory, Vec3 pos)
+	public static boolean extract(IGravitationHandler gravitation, IItemHandler inventory, Vec3 pos)
 	{
-		if (transportation.isFull())
+		if (gravitation.isFull())
 			return false;
 
 		for (int slot = 0; slot < inventory.getSlots(); slot++)
@@ -20,16 +20,16 @@ public class GravitationUtils
 			if (extractedStack.isEmpty())
 				continue;
 
-			if (transportation.insertItem(extractedStack, pos))
+			if (gravitation.insertItem(extractedStack, pos))
 				return true;
 		}
 
 		return false;
 	}
 
-	public static boolean insert(IGravitationHandler transportation, IItemHandler inventory, Vec3 pos)
+	public static boolean insert(IGravitationHandler gravitation, IItemHandler inventory, Vec3 pos)
 	{
-		ItemStack toInsert = transportation.extractItem(STACK_SIZE, pos, true);
+		ItemStack toInsert = gravitation.extractItem(STACK_SIZE, pos, true);
 		if (toInsert.isEmpty())
 			return false;
 
@@ -38,7 +38,7 @@ public class GravitationUtils
 		if (remainingStack.getCount() == toInsert.getCount())
 			return false;
 
-		transportation.extractItem(toInsert.getCount() - remainingStack.getCount(), pos, false);
+		gravitation.extractItem(toInsert.getCount() - remainingStack.getCount(), pos, false);
 		return true;
 	}
 }

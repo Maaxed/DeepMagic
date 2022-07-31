@@ -99,11 +99,11 @@ public class EntityReplaceGravitationMessage
 			if (entity == null)
 				return;
 
-			entity.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			entity.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(gravitation ->
 			{
-				if (transportation instanceof BaseGravitationHandler bth)
+				if (gravitation instanceof BaseGravitationHandler baseGravitation)
 				{
-					bth.replaceContent(msg.stacks);
+					baseGravitation.replaceContent(msg.stacks);
 				}
 			});
 		}

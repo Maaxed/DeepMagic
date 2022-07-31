@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.Blocks;
 
 public class ModRecipeProvider extends RecipeProvider
 {
-
 	public ModRecipeProvider(DataGenerator generatorIn)
 	{
 		super(generatorIn);
@@ -60,5 +59,4 @@ public class ModRecipeProvider extends RecipeProvider
 	{
 		return "GravitationalSorcery Recipes";
 	}
-
 }

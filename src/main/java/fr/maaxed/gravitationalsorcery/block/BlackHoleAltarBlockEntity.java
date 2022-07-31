@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler;
 import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
-import fr.maaxed.gravitationalsorcery.capability.ClientTransportationHandler;
+import fr.maaxed.gravitationalsorcery.capability.ClientGravitationHandler;
 import fr.maaxed.gravitationalsorcery.capability.IGravitationHandler;
 import fr.maaxed.gravitationalsorcery.capability.SyncGravitationHandler;
 import fr.maaxed.gravitationalsorcery.capability.GravitationUtils;
@@ -43,7 +43,7 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 	private static final int MAX_USE_DISTANCE = 32;
 
 	private CompoundTag handlerTag = null;
-	private BaseGravitationHandler transportationHandler = null;
+	private BaseGravitationHandler gravitationHandler = null;
 	private LazyOptional<IGravitationHandler> lazyCapa = LazyOptional.empty();
 	private final List<Action> actions = new ArrayList<>();
 	private int currentAction = 0;
@@ -58,16 +58,16 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 	public void setLevel(Level lvl)
 	{
 		super.setLevel(lvl);
-		if (this.transportationHandler != null)
+		if (this.gravitationHandler != null)
 			return;
 
 		int size = 16;
-		this.transportationHandler = lvl.isClientSide ? new ClientTransportationHandler(size) : new SyncGravitationHandler(size, CapabilityProviderHolder.blockEntity(this));
+		this.gravitationHandler = lvl.isClientSide ? new ClientGravitationHandler(size) : new SyncGravitationHandler(size, CapabilityProviderHolder.blockEntity(this));
 		if (this.handlerTag != null)
 		{
-			this.transportationHandler.deserializeNBT(this.handlerTag);
+			this.gravitationHandler.deserializeNBT(this.handlerTag);
 		}
-		this.lazyCapa = LazyOptional.of(() -> this.transportationHandler);
+		this.lazyCapa = LazyOptional.of(() -> this.gravitationHandler);
 	}
 
 	public BlackHoleAltarBlockEntity(BlockPos pos, BlockState state)
@@ -86,9 +86,9 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 
 	private void saveCommonData(CompoundTag tags)
 	{
-		if (this.transportationHandler != null)
+		if (this.gravitationHandler != null)
 		{
-			tags.put("content", this.transportationHandler.serializeNBT());
+			tags.put("content", this.gravitationHandler.serializeNBT());
 		}
 		else if (this.handlerTag != null)
 		{
@@ -106,10 +106,10 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 	public void load(CompoundTag tags)
 	{
 		super.load(tags);
-		if (this.transportationHandler != null)
+		if (this.gravitationHandler != null)
 		{
 			this.handlerTag = null;
-			this.transportationHandler.deserializeNBT(tags.getCompound("content"));
+			this.gravitationHandler.deserializeNBT(tags.getCompound("content"));
 		}
 		else
 		{
@@ -189,7 +189,7 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 
 	protected void tick()
 	{
-		this.transportationHandler.update();
+		this.gravitationHandler.update();
 
 		if (this.level.isClientSide)
 			return;
@@ -233,6 +233,7 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 		blockEntity.tick();
 	}
 
+	/** Add particle effects */
 	public void renderEffect()
 	{
 		Vec3 pos1 = Vec3.atCenterOf(this.getBlockPos());
@@ -267,10 +268,12 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 		return new AABB(pos.offset(-1, 0, -1), pos.offset(2, 2, 2));
 	}
 
+	/** An action the altar can perform */
 	public static class Action
 	{
 		public final BlockPos pos;
 		public final Direction face;
+		/** true = insert, false = extrct */
 		public final boolean insert;
 		private LazyOptional<IItemHandler> capa = LazyOptional.empty();
 
@@ -289,6 +292,10 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 				this.pos.getZ() + 0.5 + this.face.getStepZ() * 0.5);
 		}
 
+		/**
+		 * Performs this action on the blockentity
+		 * @return true if the action succeded, false otherwise
+		 */
 		public boolean activate(BlackHoleAltarBlockEntity blockentity)
 		{
 			if (!capa.isPresent())
@@ -306,11 +313,11 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 
 				if (this.insert)
 				{
-					return GravitationUtils.insert(blockentity.transportationHandler, inventory, pos);
+					return GravitationUtils.insert(blockentity.gravitationHandler, inventory, pos);
 				}
 				else
 				{
-					return GravitationUtils.extract(blockentity.transportationHandler, inventory, pos);
+					return GravitationUtils.extract(blockentity.gravitationHandler, inventory, pos);
 				}
 			}).orElse(false);
 		}

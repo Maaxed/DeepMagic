@@ -24,7 +24,6 @@ public class BlackHoleWandItem extends Item
     private static final int USE_DURATION = 60 * 60 * 20; // 1h
     private static final int USE_TIME = 5; // 0.25sec
 
-
     public BlackHoleWandItem(Properties properties)
     {
         super(properties.stacksTo(1));

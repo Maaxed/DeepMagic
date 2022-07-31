@@ -47,7 +47,7 @@ public class CapabilityGravitationHandler
 				return;
 
 			int size = 16;
-			BaseGravitationHandler handler = player.level.isClientSide ? new ClientTransportationHandler(size) : new SyncGravitationHandler(size, CapabilityProviderHolder.entity(player));
+			BaseGravitationHandler handler = player.level.isClientSide ? new ClientGravitationHandler(size) : new SyncGravitationHandler(size, CapabilityProviderHolder.entity(player));
 			GravitationCapabilityProvider<?, ?> capability = new GravitationCapabilityProvider<>(handler);
 
 			event.addListener(capability::invalidate);

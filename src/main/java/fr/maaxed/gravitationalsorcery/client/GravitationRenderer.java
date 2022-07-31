@@ -5,7 +5,7 @@ import com.mojang.math.Quaternion;
 
 import fr.maaxed.gravitationalsorcery.GravitationalSorceryMod;
 import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
-import fr.maaxed.gravitationalsorcery.capability.ClientTransportationHandler;
+import fr.maaxed.gravitationalsorcery.capability.ClientGravitationHandler;
 import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler.TransportStack;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -75,14 +75,14 @@ public class GravitationRenderer
 
 	public static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, ItemRenderer itemRenderer, ICapabilityProvider capabilityProvider, Vec3 pos, float partialTick, long tickCount, int packedLight, int packedOverlay, int randSeed)
 	{
-		capabilityProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+		capabilityProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(gravitation ->
 		{
-			if (!(transportation instanceof ClientTransportationHandler bth)) return;
+			if (!(gravitation instanceof ClientGravitationHandler baseGravitation)) return;
 
 			double fullTick = (double)tickCount + partialTick;
-			int stackCount = bth.getSize();
+			int stackCount = baseGravitation.getSize();
 
-			bth.getIndexStacks((stack, i) ->
+			baseGravitation.getIndexStacks((stack, i) ->
 			{
 				renderStack(itemRenderer, poseStack, buffer, fullTick, Mth.TWO_PI * i / stackCount, stack, pos, partialTick, packedLight, packedOverlay, randSeed + i);
 			});
