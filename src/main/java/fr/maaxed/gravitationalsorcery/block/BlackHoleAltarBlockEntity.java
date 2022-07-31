@@ -265,7 +265,13 @@ public class BlackHoleAltarBlockEntity extends BlockEntity
 	public AABB getRenderBoundingBox()
 	{
 		BlockPos pos = this.getBlockPos();
-		return new AABB(pos.offset(-1, 0, -1), pos.offset(2, 2, 2));
+		AABB box = new AABB(pos.offset(-1, 0, -1), pos.offset(2, 2, 2));
+		for (Action action : this.actions)
+		{
+			Vec3 actionPos = action.getPos();
+			box = box.minmax(new AABB(actionPos.subtract(0.25, 0.25, 0.25), actionPos.add(0.25, 0.25, 0.25)));
+		}
+		return box;
 	}
 
 	/** An action the altar can perform */
