@@ -10,12 +10,12 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TransportationCapabilityProvider<T extends Tag, C extends ITransportationHandler & INBTSerializable<T>> implements ICapabilitySerializable<T>
+public class GravitationCapabilityProvider<T extends Tag, C extends IGravitationHandler & INBTSerializable<T>> implements ICapabilitySerializable<T>
 {
 	private final C capabilityValue;
-	private final LazyOptional<ITransportationHandler> lazyCapability;
+	private final LazyOptional<IGravitationHandler> lazyCapability;
 
-	public TransportationCapabilityProvider(C capabilityValue)
+	public GravitationCapabilityProvider(C capabilityValue)
 	{
 		this.capabilityValue = capabilityValue;
 		this.lazyCapability = LazyOptional.of(() -> capabilityValue);
@@ -29,7 +29,7 @@ public class TransportationCapabilityProvider<T extends Tag, C extends ITranspor
 	@Override
 	public <U> @NotNull LazyOptional<U> getCapability(@NotNull Capability<U> cap, @Nullable Direction side)
 	{
-		return CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY.orEmpty(cap, this.lazyCapability);
+		return CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY.orEmpty(cap, this.lazyCapability);
 	}
 
 	@Override

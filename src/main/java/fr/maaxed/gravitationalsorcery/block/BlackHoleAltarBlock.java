@@ -1,7 +1,7 @@
 package fr.maaxed.gravitationalsorcery.block;
 
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.CapabilityTransportationHandler;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
 import fr.maaxed.gravitationalsorcery.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TransportationBlock extends Block implements EntityBlock
+public class BlackHoleAltarBlock extends Block implements EntityBlock
 {
 	protected static final VoxelShape SHAPE = Shapes.or(
 			box(0.0, 0.0, 0.0, 16.0, 5.0, 16.0),
@@ -29,7 +29,7 @@ public class TransportationBlock extends Block implements EntityBlock
 			box(11.0, 5.0,  5.0, 16.0, 9.0, 11.0)
 		);
 
-	public TransportationBlock(Properties properties)
+	public BlackHoleAltarBlock(Properties properties)
 	{
 		super(properties);
 	}
@@ -48,14 +48,14 @@ public class TransportationBlock extends Block implements EntityBlock
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new TransportationBlockEntity(pos, state);
+		return new BlackHoleAltarBlockEntity(pos, state);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
 	{
-		return type == ModBlocks.TRANSPORTATION_BLOCKENTITY.get() ? (BlockEntityTicker<T>) (BlockEntityTicker<TransportationBlockEntity>)TransportationBlockEntity::tick : null;
+		return type == ModBlocks.BLACK_HOLE_ALTAR_BLOCKENTITY.get() ? (BlockEntityTicker<T>) (BlockEntityTicker<BlackHoleAltarBlockEntity>)BlackHoleAltarBlockEntity::tick : null;
 	}
 
 	public boolean triggerEvent(BlockState state, Level lvl, BlockPos pos, int eventId, int eventValue)
@@ -78,9 +78,9 @@ public class TransportationBlock extends Block implements EntityBlock
 		if (be != null)
 		{
 			// Drop transportation items
-			be.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			be.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (!(transportation instanceof BaseTransportationHandler bth))
+				if (!(transportation instanceof BaseGravitationHandler bth))
 					return;
 
 				Containers.dropContents(lvl, pos, bth.getDrops());

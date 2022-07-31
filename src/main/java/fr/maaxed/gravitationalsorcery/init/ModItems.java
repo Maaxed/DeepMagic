@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import fr.maaxed.gravitationalsorcery.GravitationalSorceryMod;
 import fr.maaxed.gravitationalsorcery.item.ConfigurationWandItem;
-import fr.maaxed.gravitationalsorcery.item.TransportationWandItem;
+import fr.maaxed.gravitationalsorcery.item.BlackHoleWandItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -18,8 +18,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems
 {
 	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, GravitationalSorceryMod.MOD_ID);
-	public static final RegistryObject<Item> DEEP_DARK_PEARL = register("black_hole", Item::new);
-	public static final RegistryObject<TransportationWandItem> TRANSPORTATION_WAND = register("black_hole_wand", TransportationWandItem::new);
+	public static final RegistryObject<Item> BLACK_HOLE = register("black_hole", Item::new);
+	public static final RegistryObject<BlackHoleWandItem> BLACK_HOLE_WAND = register("black_hole_wand", BlackHoleWandItem::new);
 	public static final RegistryObject<ConfigurationWandItem> CONFIGURATION_WAND = register("black_hole_configurator", ConfigurationWandItem::new);
 
 	private static final Supplier<Properties> DEFAULT_PROPERTIES = () -> new Properties().tab(ModItemGroups.MAIN_TAB);

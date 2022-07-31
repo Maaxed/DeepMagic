@@ -1,7 +1,7 @@
 package fr.maaxed.gravitationalsorcery.item;
 
-import fr.maaxed.gravitationalsorcery.capability.CapabilityTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.TransportationUtils;
+import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.GravitationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,13 +19,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 // On right click : extract items from the target container, put the items in a levitation state around the player
 // On shift + right click : insert levitating items in the target container
-public class TransportationWandItem extends Item
+public class BlackHoleWandItem extends Item
 {
     private static final int USE_DURATION = 60 * 60 * 20; // 1h
     private static final int USE_TIME = 5; // 0.25sec
 
 
-    public TransportationWandItem(Properties properties)
+    public BlackHoleWandItem(Properties properties)
     {
         super(properties.stacksTo(1));
     }
@@ -66,7 +66,7 @@ public class TransportationWandItem extends Item
 
         be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent( inventory ->
         {
-            player.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+            player.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
             {
                 Vec3 pos = new Vec3(
                         targetPos.getX() + 0.5 + targetFace.getStepX() * 0.5,
@@ -74,11 +74,11 @@ public class TransportationWandItem extends Item
                         targetPos.getZ() + 0.5 + targetFace.getStepZ() * 0.5);
                 if (player.isShiftKeyDown())
                 {
-                    TransportationUtils.insert(transportation, inventory, pos);
+                    GravitationUtils.insert(transportation, inventory, pos);
                 }
                 else
                 {
-                    TransportationUtils.extract(transportation, inventory, pos);
+                    GravitationUtils.extract(transportation, inventory, pos);
                 }
             });
         });

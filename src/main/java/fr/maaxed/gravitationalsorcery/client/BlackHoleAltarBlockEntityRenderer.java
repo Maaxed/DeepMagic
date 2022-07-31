@@ -1,11 +1,10 @@
 package fr.maaxed.gravitationalsorcery.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import fr.maaxed.gravitationalsorcery.GravitationalSorceryMod;
-import fr.maaxed.gravitationalsorcery.block.TransportationBlockEntity;
+import fr.maaxed.gravitationalsorcery.block.BlackHoleAltarBlockEntity;
 import fr.maaxed.gravitationalsorcery.init.ModBlocks;
 import fr.maaxed.gravitationalsorcery.init.ModItems;
 import net.minecraft.client.Camera;
@@ -26,25 +25,25 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 @EventBusSubscriber(modid = GravitationalSorceryMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
-public class TransportationBlockEntityRenderer implements BlockEntityRenderer<TransportationBlockEntity>
+public class BlackHoleAltarBlockEntityRenderer implements BlockEntityRenderer<BlackHoleAltarBlockEntity>
 {
-	private final ItemStack blackHoleItem = new ItemStack(ModItems.DEEP_DARK_PEARL.get());
+	private final ItemStack blackHoleItem = new ItemStack(ModItems.BLACK_HOLE.get());
 
 	@SubscribeEvent
 	public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event)
 	{
-		event.registerBlockEntityRenderer(ModBlocks.TRANSPORTATION_BLOCKENTITY.get(), TransportationBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlocks.BLACK_HOLE_ALTAR_BLOCKENTITY.get(), BlackHoleAltarBlockEntityRenderer::new);
 	}
 
 	private final ItemRenderer itemRenderer;
 
-	private TransportationBlockEntityRenderer(BlockEntityRendererProvider.Context context)
+	private BlackHoleAltarBlockEntityRenderer(BlockEntityRendererProvider.Context context)
 	{
 		this.itemRenderer = context.getItemRenderer();
 	}
 
 	@Override
-	public void render(TransportationBlockEntity be, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
+	public void render(BlackHoleAltarBlockEntity be, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
 	{
 		int randomSeed = be.getBlockPos().hashCode();
 		long tickCount = be.getLevel().getGameTime();
@@ -78,7 +77,7 @@ public class TransportationBlockEntityRenderer implements BlockEntityRenderer<Tr
 		poseStack.pushPose();
 		BlockPos pos = be.getBlockPos();
 		poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-		TransportationRenderer.renderTransportation(poseStack, buffer, this.itemRenderer, be, Vec3.atCenterOf(pos).add(0.0, 0.5, 0.0), partialTicks, tickCount, combinedLight, combinedOverlay, randomSeed + 1);
+		GravitationRenderer.renderTransportation(poseStack, buffer, this.itemRenderer, be, Vec3.atCenterOf(pos).add(0.0, 0.5, 0.0), partialTicks, tickCount, combinedLight, combinedOverlay, randomSeed + 1);
 		poseStack.popPose();
 	}
 }

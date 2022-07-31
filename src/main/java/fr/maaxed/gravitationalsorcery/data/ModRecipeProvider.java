@@ -22,7 +22,7 @@ public class ModRecipeProvider extends RecipeProvider
 	@Override
 	protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer)
 	{
-		ShapedRecipeBuilder.shaped(ModItems.DEEP_DARK_PEARL.get())
+		ShapedRecipeBuilder.shaped(ModItems.BLACK_HOLE.get())
 			.pattern("SSS")
 			.pattern("SES")
 			.pattern("SSS")
@@ -30,28 +30,28 @@ public class ModRecipeProvider extends RecipeProvider
 			.define('E', Items.ENDER_PEARL)
 			.unlockedBy("has_echo_shard", has(Items.ECHO_SHARD))
 			.save(consumer);
-		ShapedRecipeBuilder.shaped(ModItems.TRANSPORTATION_WAND.get())
+		ShapedRecipeBuilder.shaped(ModItems.BLACK_HOLE_WAND.get())
 			.pattern(" P")
 			.pattern("/ ")
-			.define('P', ModItems.DEEP_DARK_PEARL.get())
+			.define('P', ModItems.BLACK_HOLE.get())
 			.define('/', Items.STICK)
-			.unlockedBy("has_deep_dark_pearl", has(ModItems.DEEP_DARK_PEARL.get()))
+			.unlockedBy("has_deep_dark_pearl", has(ModItems.BLACK_HOLE.get()))
 			.save(consumer);
 		ShapedRecipeBuilder.shaped(ModItems.CONFIGURATION_WAND.get())
 			.pattern(" S")
 			.pattern("/ ")
 			.define('S', Items.ECHO_SHARD)
 			.define('/', Items.STICK)
-			.unlockedBy("has_deep_dark_pearl", has(ModItems.DEEP_DARK_PEARL.get()))
+			.unlockedBy("has_deep_dark_pearl", has(ModItems.BLACK_HOLE.get()))
 			.save(consumer);
-		ShapedRecipeBuilder.shaped(ModBlocks.TRANSPORTATION_BLOCK_ITEM.get())
+		ShapedRecipeBuilder.shaped(ModBlocks.BLACK_HOLE_ALTAR_ITEM.get())
 			.pattern(" P ")
 			.pattern("S#S")
 			.pattern("###")
-			.define('P', ModItems.DEEP_DARK_PEARL.get())
+			.define('P', ModItems.BLACK_HOLE.get())
 			.define('S', Items.ECHO_SHARD)
 			.define('#', Blocks.COBBLESTONE)
-			.unlockedBy("has_deep_dark_pearl", has(ModItems.DEEP_DARK_PEARL.get()))
+			.unlockedBy("has_deep_dark_pearl", has(ModItems.BLACK_HOLE.get()))
 			.save(consumer);
 	}
 

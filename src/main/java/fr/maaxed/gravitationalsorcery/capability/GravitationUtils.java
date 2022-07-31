@@ -5,11 +5,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class TransportationUtils
+public class GravitationUtils
 {
 	private static final int STACK_SIZE = 8;
 
-	public static boolean extract(ITransportationHandler transportation, IItemHandler inventory, Vec3 pos)
+	public static boolean extract(IGravitationHandler transportation, IItemHandler inventory, Vec3 pos)
 	{
 		if (transportation.isFull())
 			return false;
@@ -27,7 +27,7 @@ public class TransportationUtils
 		return false;
 	}
 
-	public static boolean insert(ITransportationHandler transportation, IItemHandler inventory, Vec3 pos)
+	public static boolean insert(IGravitationHandler transportation, IItemHandler inventory, Vec3 pos)
 	{
 		ItemStack toInsert = transportation.extractItem(STACK_SIZE, pos, true);
 		if (toInsert.isEmpty())

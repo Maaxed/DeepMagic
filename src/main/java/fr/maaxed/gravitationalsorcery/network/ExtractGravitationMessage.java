@@ -2,9 +2,9 @@ package fr.maaxed.gravitationalsorcery.network;
 
 import java.util.function.Supplier;
 
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.CapabilityTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler.TransportStack;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler.TransportStack;
 import fr.maaxed.gravitationalsorcery.util.CapabilityProviderHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,20 +15,20 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ExtractTransportationMessage
+public class ExtractGravitationMessage
 {
 	private final CapabilityProviderHolder capabilityHolder;
 	private final int count;
 	private final Vec3 targetPos;
 
-	private ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, int count, Vec3 targetPos)
+	private ExtractGravitationMessage(CapabilityProviderHolder capabilityHolder, int count, Vec3 targetPos)
 	{
 		this.capabilityHolder = capabilityHolder;
 		this.count = count;
 		this.targetPos = targetPos;
 	}
 
-	public ExtractTransportationMessage(CapabilityProviderHolder capabilityHolder, TransportStack stack)
+	public ExtractGravitationMessage(CapabilityProviderHolder capabilityHolder, TransportStack stack)
 	{
 		this(capabilityHolder, stack.getStack().getCount(), stack.getTargetPosition());
 	}
@@ -42,9 +42,9 @@ public class ExtractTransportationMessage
 		buf.writeDouble(this.targetPos.z);
 	}
 
-	public static ExtractTransportationMessage decode(FriendlyByteBuf buf)
+	public static ExtractGravitationMessage decode(FriendlyByteBuf buf)
 	{
-		return new ExtractTransportationMessage(
+		return new ExtractGravitationMessage(
 			CapabilityProviderHolder.decode(buf),
 			buf.readInt(),
 			new Vec3(
@@ -63,7 +63,7 @@ public class ExtractTransportationMessage
 	// Client only code
 	private static class ClientHandler
 	{
-		public static void handle(ExtractTransportationMessage msg)
+		public static void handle(ExtractGravitationMessage msg)
 		{
 			Level lvl = Minecraft.getInstance().level;
 			if (lvl == null)
@@ -74,9 +74,9 @@ public class ExtractTransportationMessage
 			if (capaProvider == null)
 				return;
 
-			capaProvider.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			capaProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (transportation instanceof BaseTransportationHandler bth)
+				if (transportation instanceof BaseGravitationHandler bth)
 				{
 					bth.extractItem(msg.count, msg.targetPos, false);
 				}

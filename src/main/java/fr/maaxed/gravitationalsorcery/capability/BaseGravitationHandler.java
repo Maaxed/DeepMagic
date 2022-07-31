@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class BaseTransportationHandler implements ITransportationHandler, INBTSerializable<CompoundTag>
+public class BaseGravitationHandler implements IGravitationHandler, INBTSerializable<CompoundTag>
 {
 	/** Content of the circular queue **/
 	protected TransportStack[] itemQueue;
@@ -24,7 +24,7 @@ public class BaseTransportationHandler implements ITransportationHandler, INBTSe
 	/** Number of elements currently in the queue **/
 	protected int queueSize;
 
-	public BaseTransportationHandler(int capacity)
+	public BaseGravitationHandler(int capacity)
 	{
 		itemQueue = new TransportStack[capacity];
 		this.queueStartIndex = 0;

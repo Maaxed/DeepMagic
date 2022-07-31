@@ -20,7 +20,7 @@ public class ModBlockStateProvider extends BlockStateProvider
 	@Override
 	protected void registerStatesAndModels()
 	{
-		simpleBlock(ModBlocks.TRANSPORTATION_BLOCK.get(), models().getExistingFile(new ResourceLocation(GravitationalSorceryMod.MOD_ID, "block/black_hole_altar")));
+		simpleBlock(ModBlocks.BLACK_HOLE_ALTAR_BLOCK.get(), models().getExistingFile(new ResourceLocation(GravitationalSorceryMod.MOD_ID, "block/black_hole_altar")));
 	}
 
 	@Override

@@ -2,9 +2,9 @@ package fr.maaxed.gravitationalsorcery.init;
 
 import fr.maaxed.gravitationalsorcery.GravitationalSorceryMod;
 import fr.maaxed.gravitationalsorcery.network.BlockReplaceActionMessage;
-import fr.maaxed.gravitationalsorcery.network.EntityReplaceTransportationMessage;
-import fr.maaxed.gravitationalsorcery.network.ExtractTransportationMessage;
-import fr.maaxed.gravitationalsorcery.network.InsertTransportationMessage;
+import fr.maaxed.gravitationalsorcery.network.EntityReplaceGravitationMessage;
+import fr.maaxed.gravitationalsorcery.network.ExtractGravitationMessage;
+import fr.maaxed.gravitationalsorcery.network.InsertGravitationMessage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -32,22 +32,22 @@ public class ModNetwork
 	{
 		int id = 0;
 		CHANNEL
-			.messageBuilder(InsertTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
-			.encoder(InsertTransportationMessage::encode)
-			.decoder(InsertTransportationMessage::decode)
-			.consumerMainThread(InsertTransportationMessage::handleMainThread)
+			.messageBuilder(InsertGravitationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+			.encoder(InsertGravitationMessage::encode)
+			.decoder(InsertGravitationMessage::decode)
+			.consumerMainThread(InsertGravitationMessage::handleMainThread)
 			.add();
 		CHANNEL
-			.messageBuilder(ExtractTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
-			.encoder(ExtractTransportationMessage::encode)
-			.decoder(ExtractTransportationMessage::decode)
-			.consumerMainThread(ExtractTransportationMessage::handleMainThread)
+			.messageBuilder(ExtractGravitationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+			.encoder(ExtractGravitationMessage::encode)
+			.decoder(ExtractGravitationMessage::decode)
+			.consumerMainThread(ExtractGravitationMessage::handleMainThread)
 			.add();
 		CHANNEL
-			.messageBuilder(EntityReplaceTransportationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
-			.encoder(EntityReplaceTransportationMessage::encode)
-			.decoder(EntityReplaceTransportationMessage::decode)
-			.consumerMainThread(EntityReplaceTransportationMessage::handleMainThread)
+			.messageBuilder(EntityReplaceGravitationMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+			.encoder(EntityReplaceGravitationMessage::encode)
+			.decoder(EntityReplaceGravitationMessage::decode)
+			.consumerMainThread(EntityReplaceGravitationMessage::handleMainThread)
 			.add();
 		CHANNEL
 			.messageBuilder(BlockReplaceActionMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)

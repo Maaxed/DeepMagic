@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import fr.maaxed.gravitationalsorcery.block.TransportationBlockEntity;
-import fr.maaxed.gravitationalsorcery.block.TransportationBlockEntity.Action;
+import fr.maaxed.gravitationalsorcery.block.BlackHoleAltarBlockEntity;
+import fr.maaxed.gravitationalsorcery.block.BlackHoleAltarBlockEntity.Action;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +18,7 @@ import net.minecraftforge.network.NetworkEvent;
 public class BlockReplaceActionMessage
 {
 	private final BlockPos blockPos;
-	private final List<TransportationBlockEntity.Action> actions;
+	private final List<BlackHoleAltarBlockEntity.Action> actions;
 
 	private BlockReplaceActionMessage(BlockPos blockPos, List<Action> actions)
 	{
@@ -26,7 +26,7 @@ public class BlockReplaceActionMessage
 		this.actions = actions;
 	}
 
-	public BlockReplaceActionMessage(TransportationBlockEntity be)
+	public BlockReplaceActionMessage(BlackHoleAltarBlockEntity be)
 	{
 		this(be.getBlockPos(), be.getActions());
 	}
@@ -46,11 +46,11 @@ public class BlockReplaceActionMessage
 	public static BlockReplaceActionMessage decode(FriendlyByteBuf buf)
 	{
 		BlockPos blockPos = buf.readBlockPos();
-		List<TransportationBlockEntity.Action> actions = new ArrayList<>();
+		List<BlackHoleAltarBlockEntity.Action> actions = new ArrayList<>();
 		int count = buf.readInt();
 		for (int i = 0; i < count; i++)
 		{
-			actions.add(new TransportationBlockEntity.Action(
+			actions.add(new BlackHoleAltarBlockEntity.Action(
 				buf.readBlockPos(),
 				buf.readEnum(Direction.class),
 				buf.readBoolean()
@@ -73,7 +73,7 @@ public class BlockReplaceActionMessage
 			if (lvl == null)
 				return;
 
-			if (!(lvl.getBlockEntity(msg.blockPos) instanceof TransportationBlockEntity tbe))
+			if (!(lvl.getBlockEntity(msg.blockPos) instanceof BlackHoleAltarBlockEntity tbe))
 				return;
 
 			tbe.setActions(msg.actions);

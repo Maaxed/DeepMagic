@@ -6,12 +6,12 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.CapabilityTransportationHandler;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
 import fr.maaxed.gravitationalsorcery.capability.ClientTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.ITransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.SyncTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.TransportationUtils;
+import fr.maaxed.gravitationalsorcery.capability.IGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.SyncGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.GravitationUtils;
 import fr.maaxed.gravitationalsorcery.init.ModBlocks;
 import fr.maaxed.gravitationalsorcery.init.ModNetwork;
 import fr.maaxed.gravitationalsorcery.network.BlockReplaceActionMessage;
@@ -35,7 +35,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.PacketDistributor;
 
-public class TransportationBlockEntity extends BlockEntity
+public class BlackHoleAltarBlockEntity extends BlockEntity
 {
 	private static final int USE_COUNT = 16;
 	private static final int USE_TIME = 5; // 0.25sec
@@ -43,13 +43,13 @@ public class TransportationBlockEntity extends BlockEntity
 	private static final int MAX_USE_DISTANCE = 32;
 
 	private CompoundTag handlerTag = null;
-	private BaseTransportationHandler transportationHandler = null;
-	private LazyOptional<ITransportationHandler> lazyCapa = LazyOptional.empty();
+	private BaseGravitationHandler transportationHandler = null;
+	private LazyOptional<IGravitationHandler> lazyCapa = LazyOptional.empty();
 	private final List<Action> actions = new ArrayList<>();
 	private int currentAction = 0;
 	private int actionTimer = 0;
 
-	public TransportationBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
+	public BlackHoleAltarBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
 	{
 		super(type, pos, state);
 	}
@@ -62,7 +62,7 @@ public class TransportationBlockEntity extends BlockEntity
 			return;
 
 		int size = 16;
-		this.transportationHandler = lvl.isClientSide ? new ClientTransportationHandler(size) : new SyncTransportationHandler(size, CapabilityProviderHolder.blockEntity(this));
+		this.transportationHandler = lvl.isClientSide ? new ClientTransportationHandler(size) : new SyncGravitationHandler(size, CapabilityProviderHolder.blockEntity(this));
 		if (this.handlerTag != null)
 		{
 			this.transportationHandler.deserializeNBT(this.handlerTag);
@@ -70,9 +70,9 @@ public class TransportationBlockEntity extends BlockEntity
 		this.lazyCapa = LazyOptional.of(() -> this.transportationHandler);
 	}
 
-	public TransportationBlockEntity(BlockPos pos, BlockState state)
+	public BlackHoleAltarBlockEntity(BlockPos pos, BlockState state)
 	{
-		this(ModBlocks.TRANSPORTATION_BLOCKENTITY.get(), pos, state);
+		this(ModBlocks.BLACK_HOLE_ALTAR_BLOCKENTITY.get(), pos, state);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class TransportationBlockEntity extends BlockEntity
 	@Override
 	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
 	{
-		if (cap == CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY)
+		if (cap == CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY)
 			return this.lazyCapa.cast();
 
 		return super.getCapability(cap, side);
@@ -228,7 +228,7 @@ public class TransportationBlockEntity extends BlockEntity
 		}
 	}
 
-	public static void tick(Level level, BlockPos pos, BlockState state, TransportationBlockEntity blockEntity)
+	public static void tick(Level level, BlockPos pos, BlockState state, BlackHoleAltarBlockEntity blockEntity)
 	{
 		blockEntity.tick();
 	}
@@ -289,7 +289,7 @@ public class TransportationBlockEntity extends BlockEntity
 				this.pos.getZ() + 0.5 + this.face.getStepZ() * 0.5);
 		}
 
-		public boolean activate(TransportationBlockEntity blockentity)
+		public boolean activate(BlackHoleAltarBlockEntity blockentity)
 		{
 			if (!capa.isPresent())
 			{
@@ -306,11 +306,11 @@ public class TransportationBlockEntity extends BlockEntity
 
 				if (this.insert)
 				{
-					return TransportationUtils.insert(blockentity.transportationHandler, inventory, pos);
+					return GravitationUtils.insert(blockentity.transportationHandler, inventory, pos);
 				}
 				else
 				{
-					return TransportationUtils.extract(blockentity.transportationHandler, inventory, pos);
+					return GravitationUtils.extract(blockentity.transportationHandler, inventory, pos);
 				}
 			}).orElse(false);
 		}

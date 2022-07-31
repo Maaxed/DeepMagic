@@ -2,7 +2,7 @@ package fr.maaxed.gravitationalsorcery.capability;
 
 import fr.maaxed.gravitationalsorcery.GravitationalSorceryMod;
 import fr.maaxed.gravitationalsorcery.init.ModNetwork;
-import fr.maaxed.gravitationalsorcery.network.EntityReplaceTransportationMessage;
+import fr.maaxed.gravitationalsorcery.network.EntityReplaceGravitationMessage;
 import fr.maaxed.gravitationalsorcery.util.CapabilityProviderHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,14 +27,14 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = GravitationalSorceryMod.MOD_ID, bus = Bus.MOD)
-public class CapabilityTransportationHandler
+public class CapabilityGravitationHandler
 {
-	public static final Capability<ITransportationHandler> TRANSPORTATION_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+	public static final Capability<IGravitationHandler> GRAVITATION_HANDLER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
 	@SubscribeEvent
 	public static void registerCapability(RegisterCapabilitiesEvent event)
 	{
-		event.register(ITransportationHandler.class);
+		event.register(IGravitationHandler.class);
 	}
 
 	@EventBusSubscriber(modid = GravitationalSorceryMod.MOD_ID, bus = Bus.FORGE)
@@ -47,8 +47,8 @@ public class CapabilityTransportationHandler
 				return;
 
 			int size = 16;
-			BaseTransportationHandler handler = player.level.isClientSide ? new ClientTransportationHandler(size) : new SyncTransportationHandler(size, CapabilityProviderHolder.entity(player));
-			TransportationCapabilityProvider<?, ?> capability = new TransportationCapabilityProvider<>(handler);
+			BaseGravitationHandler handler = player.level.isClientSide ? new ClientTransportationHandler(size) : new SyncGravitationHandler(size, CapabilityProviderHolder.entity(player));
+			GravitationCapabilityProvider<?, ?> capability = new GravitationCapabilityProvider<>(handler);
 
 			event.addListener(capability::invalidate);
 			event.addCapability(new ResourceLocation(GravitationalSorceryMod.MOD_ID, "main_transportation"), capability);
@@ -61,12 +61,12 @@ public class CapabilityTransportationHandler
 			if (!(event.getEntity() instanceof ServerPlayer player))
 				return;
 
-			player.getCapability(TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			player.getCapability(GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (!(transportation instanceof BaseTransportationHandler bth))
+				if (!(transportation instanceof BaseGravitationHandler bth))
 					return;
 
-				ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new EntityReplaceTransportationMessage(player, bth));
+				ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new EntityReplaceGravitationMessage(player, bth));
 			});
 		}
 
@@ -78,12 +78,12 @@ public class CapabilityTransportationHandler
 				return;
 
 			Entity target = event.getTarget();
-			target.getCapability(TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			target.getCapability(GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (!(transportation instanceof BaseTransportationHandler bth))
+				if (!(transportation instanceof BaseGravitationHandler bth))
 					return;
 
-				ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new EntityReplaceTransportationMessage(target, bth));
+				ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new EntityReplaceGravitationMessage(target, bth));
 			});
 		}
 
@@ -93,9 +93,9 @@ public class CapabilityTransportationHandler
 			if (event.phase != Phase.END || event.side != LogicalSide.CLIENT)
 				return;
 
-			event.player.getCapability(TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			event.player.getCapability(GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (!(transportation instanceof BaseTransportationHandler bth))
+				if (!(transportation instanceof BaseGravitationHandler bth))
 					return;
 
 				bth.update();
@@ -107,9 +107,9 @@ public class CapabilityTransportationHandler
 		{
 			// Drop the content of the transportation capability
 			LivingEntity entity = event.getEntity();
-			entity.getCapability(TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			entity.getCapability(GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (!(transportation instanceof BaseTransportationHandler bth))
+				if (!(transportation instanceof BaseGravitationHandler bth))
 					return;
 
 				for (ItemStack stack : bth.getDrops())

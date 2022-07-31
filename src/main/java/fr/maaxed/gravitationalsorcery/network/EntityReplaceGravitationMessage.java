@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.CapabilityTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler.TransportStack;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler.TransportStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -16,18 +16,18 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class EntityReplaceTransportationMessage
+public class EntityReplaceGravitationMessage
 {
 	private final int entityId;
 	private final List<TransportStack> stacks;
 
-	private EntityReplaceTransportationMessage(int entityId, List<TransportStack> stacks)
+	private EntityReplaceGravitationMessage(int entityId, List<TransportStack> stacks)
 	{
 		this.entityId = entityId;
 		this.stacks = stacks;
 	}
 
-	public EntityReplaceTransportationMessage(Entity entity, BaseTransportationHandler handler)
+	public EntityReplaceGravitationMessage(Entity entity, BaseGravitationHandler handler)
 	{
 		this(entity.getId(), handler.getContent());
 	}
@@ -54,7 +54,7 @@ public class EntityReplaceTransportationMessage
 		}
 	}
 
-	public static EntityReplaceTransportationMessage decode(FriendlyByteBuf buf)
+	public static EntityReplaceGravitationMessage decode(FriendlyByteBuf buf)
 	{
 		int entityId = buf.readInt();
 		int count = buf.readInt();
@@ -78,7 +78,7 @@ public class EntityReplaceTransportationMessage
 				));
 			}
 		}
-		return new EntityReplaceTransportationMessage(entityId, stacks);
+		return new EntityReplaceGravitationMessage(entityId, stacks);
 	}
 
 	public void handleMainThread(Supplier<NetworkEvent.Context> ctx)
@@ -89,7 +89,7 @@ public class EntityReplaceTransportationMessage
 	// Client only code
 	private static class ClientHandler
 	{
-		public static void handle(EntityReplaceTransportationMessage msg)
+		public static void handle(EntityReplaceGravitationMessage msg)
 		{
 			Level lvl = Minecraft.getInstance().level;
 			if (lvl == null)
@@ -99,9 +99,9 @@ public class EntityReplaceTransportationMessage
 			if (entity == null)
 				return;
 
-			entity.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			entity.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (transportation instanceof BaseTransportationHandler bth)
+				if (transportation instanceof BaseGravitationHandler bth)
 				{
 					bth.replaceContent(msg.stacks);
 				}

@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 
 import fr.maaxed.gravitationalsorcery.GravitationalSorceryMod;
-import fr.maaxed.gravitationalsorcery.capability.CapabilityTransportationHandler;
+import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
 import fr.maaxed.gravitationalsorcery.capability.ClientTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler.TransportStack;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler.TransportStack;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 @EventBusSubscriber(modid = GravitationalSorceryMod.MOD_ID, bus = Bus.FORGE, value = Dist.CLIENT)
-public class TransportationRenderer
+public class GravitationRenderer
 {
 	@SubscribeEvent
 	public static void renderFirstPerson(RenderLevelStageEvent event)
@@ -75,7 +75,7 @@ public class TransportationRenderer
 
 	public static void renderTransportation(PoseStack poseStack, MultiBufferSource buffer, ItemRenderer itemRenderer, ICapabilityProvider capabilityProvider, Vec3 pos, float partialTick, long tickCount, int packedLight, int packedOverlay, int randSeed)
 	{
-		capabilityProvider.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+		capabilityProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 		{
 			if (!(transportation instanceof ClientTransportationHandler bth)) return;
 

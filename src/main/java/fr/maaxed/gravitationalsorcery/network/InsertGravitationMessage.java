@@ -2,9 +2,9 @@ package fr.maaxed.gravitationalsorcery.network;
 
 import java.util.function.Supplier;
 
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.CapabilityTransportationHandler;
-import fr.maaxed.gravitationalsorcery.capability.BaseTransportationHandler.TransportStack;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.CapabilityGravitationHandler;
+import fr.maaxed.gravitationalsorcery.capability.BaseGravitationHandler.TransportStack;
 import fr.maaxed.gravitationalsorcery.util.CapabilityProviderHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,20 +16,20 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class InsertTransportationMessage
+public class InsertGravitationMessage
 {
 	private final CapabilityProviderHolder capabilityHolder;
 	private final ItemStack stack;
 	private final Vec3 pos;
 
-	private InsertTransportationMessage(CapabilityProviderHolder capabilityHolder, ItemStack stack, Vec3 pos)
+	private InsertGravitationMessage(CapabilityProviderHolder capabilityHolder, ItemStack stack, Vec3 pos)
 	{
 		this.capabilityHolder = capabilityHolder;
 		this.stack = stack;
 		this.pos = pos;
 	}
 
-	public InsertTransportationMessage(CapabilityProviderHolder capabilityHolder, TransportStack stack)
+	public InsertGravitationMessage(CapabilityProviderHolder capabilityHolder, TransportStack stack)
 	{
 		this(capabilityHolder, stack.getStack(), stack.getOriginPosition());
 	}
@@ -43,9 +43,9 @@ public class InsertTransportationMessage
 		buf.writeDouble(this.pos.z);
 	}
 
-	public static InsertTransportationMessage decode(FriendlyByteBuf buf)
+	public static InsertGravitationMessage decode(FriendlyByteBuf buf)
 	{
-		return new InsertTransportationMessage(
+		return new InsertGravitationMessage(
 			CapabilityProviderHolder.decode(buf),
 			buf.readItem(),
 			new Vec3(
@@ -64,7 +64,7 @@ public class InsertTransportationMessage
 	// Client only code
 	private static class ClientHandler
 	{
-		public static void handle(InsertTransportationMessage msg)
+		public static void handle(InsertGravitationMessage msg)
 		{
 			Level lvl = Minecraft.getInstance().level;
 			if (lvl == null)
@@ -75,9 +75,9 @@ public class InsertTransportationMessage
 			if (capaProvider == null)
 				return;
 
-			capaProvider.getCapability(CapabilityTransportationHandler.TRANSPORTATION_HANDLER_CAPABILITY).ifPresent(transportation ->
+			capaProvider.getCapability(CapabilityGravitationHandler.GRAVITATION_HANDLER_CAPABILITY).ifPresent(transportation ->
 			{
-				if (transportation instanceof BaseTransportationHandler bth)
+				if (transportation instanceof BaseGravitationHandler bth)
 				{
 					bth.insertItem(msg.stack, msg.pos);
 				}

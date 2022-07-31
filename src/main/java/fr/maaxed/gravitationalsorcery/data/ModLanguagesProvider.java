@@ -37,12 +37,12 @@ public class ModLanguagesProvider implements DataProvider
 	protected void addTranslations()
     {
     	// Items
-		add(ModItems.DEEP_DARK_PEARL.get(), "Deep Dark Black Hole", "Trou noir des abîbes");
-		add(ModItems.TRANSPORTATION_WAND.get(), "Black Hole Wand", "Baguette du trou noir");
+		add(ModItems.BLACK_HOLE.get(), "Deep Dark Black Hole", "Trou noir des abîbes");
+		add(ModItems.BLACK_HOLE_WAND.get(), "Black Hole Wand", "Baguette du trou noir");
 		add(ModItems.CONFIGURATION_WAND.get(), "Black Hole Configurator", "Configurateur de trou noir");
 
 		// Blocks
-		add(ModBlocks.TRANSPORTATION_BLOCK.get(), "Black Hole Altar", "ConfigurAutel du trou noir");
+		add(ModBlocks.BLACK_HOLE_ALTAR_BLOCK.get(), "Black Hole Altar", "ConfigurAutel du trou noir");
 
     	// ItemGroups
     	add(ModItemGroups.MAIN_TAB, "DeepMagic", "DeepMagic");

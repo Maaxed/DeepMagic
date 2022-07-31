@@ -2,7 +2,7 @@ package fr.maaxed.gravitationalsorcery.item;
 
 import java.util.List;
 
-import fr.maaxed.gravitationalsorcery.block.TransportationBlockEntity;
+import fr.maaxed.gravitationalsorcery.block.BlackHoleAltarBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -33,7 +33,7 @@ public class ConfigurationWandItem extends Item
     {
 		BlockPos clickPos = context.getClickedPos();
 		BlockEntity be = context.getLevel().getBlockEntity(clickPos);
-		if (be instanceof TransportationBlockEntity tbe)
+		if (be instanceof BlackHoleAltarBlockEntity tbe)
 		{
 			setTargetPosition(stack, clickPos);
 			return InteractionResult.SUCCESS;
@@ -45,7 +45,7 @@ public class ConfigurationWandItem extends Item
 				return InteractionResult.PASS;
 
 			BlockEntity targetBe = context.getLevel().getBlockEntity(targetPos);
-			if (!(targetBe instanceof TransportationBlockEntity tbe))
+			if (!(targetBe instanceof BlackHoleAltarBlockEntity tbe))
 				return InteractionResult.PASS;
 
 			Player player = context.getPlayer();
@@ -84,7 +84,7 @@ public class ConfigurationWandItem extends Item
 			return;
 
 		BlockEntity targetBe = level.getBlockEntity(targetPos);
-		if (!(targetBe instanceof TransportationBlockEntity tbe))
+		if (!(targetBe instanceof BlackHoleAltarBlockEntity tbe))
 			return;
 
 		tbe.renderEffect();

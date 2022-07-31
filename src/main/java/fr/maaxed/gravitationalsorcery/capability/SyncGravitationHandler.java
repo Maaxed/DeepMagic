@@ -1,15 +1,15 @@
 package fr.maaxed.gravitationalsorcery.capability;
 
 import fr.maaxed.gravitationalsorcery.init.ModNetwork;
-import fr.maaxed.gravitationalsorcery.network.ExtractTransportationMessage;
-import fr.maaxed.gravitationalsorcery.network.InsertTransportationMessage;
+import fr.maaxed.gravitationalsorcery.network.ExtractGravitationMessage;
+import fr.maaxed.gravitationalsorcery.network.InsertGravitationMessage;
 import fr.maaxed.gravitationalsorcery.util.CapabilityProviderHolder;
 
-public class SyncTransportationHandler extends BaseTransportationHandler
+public class SyncGravitationHandler extends BaseGravitationHandler
 {
 	private final CapabilityProviderHolder target;
 
-	public SyncTransportationHandler(int capacity, CapabilityProviderHolder target)
+	public SyncGravitationHandler(int capacity, CapabilityProviderHolder target)
 	{
 		super(capacity);
 		this.target = target;
@@ -21,7 +21,7 @@ public class SyncTransportationHandler extends BaseTransportationHandler
 		super.onInserted(stack, index);
 		this.target.setChanged();
 
-		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new InsertTransportationMessage(this.target, stack));
+		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new InsertGravitationMessage(this.target, stack));
 	}
 
 	@Override
@@ -30,6 +30,6 @@ public class SyncTransportationHandler extends BaseTransportationHandler
 		super.onExtracted(stack, index);
 		this.target.setChanged();
 
-		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new ExtractTransportationMessage(this.target, stack));
+		ModNetwork.CHANNEL.send(this.target.getPacketDistributor(), new ExtractGravitationMessage(this.target, stack));
 	}
 }

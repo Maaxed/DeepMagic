@@ -25,8 +25,8 @@ public class ModItemModelProvider extends ItemModelProvider
 	@Override
 	protected void registerModels()
 	{
-		simpleItem(name(ModItems.DEEP_DARK_PEARL.get()), new ResourceLocation(GravitationalSorceryMod.MOD_ID, "item/event_horizon4"));
-		simpleBlock(ModBlocks.TRANSPORTATION_BLOCK.get());
+		simpleItem(name(ModItems.BLACK_HOLE.get()), new ResourceLocation(GravitationalSorceryMod.MOD_ID, "item/event_horizon4"));
+		simpleBlock(ModBlocks.BLACK_HOLE_ALTAR_BLOCK.get());
 	}
 
 	protected ItemModelBuilder simpleItem(ItemLike entry)
